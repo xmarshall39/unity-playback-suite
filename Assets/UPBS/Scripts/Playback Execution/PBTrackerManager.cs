@@ -1,6 +1,6 @@
 using UnityEngine;
 using System.Linq;
-//MIGHT MAKE THIS JUST FOR TRACKER ID'S. DON'T KNOW YET
+
 namespace UPBS.Execution
 {
     /// <summary>
@@ -61,6 +61,11 @@ namespace UPBS.Execution
 
                 _claimedTags[i] = nextTag;
                 _TIDReferences[i].Init(nextTag);
+            }
+
+            foreach(var tracker in FindObjectsOfType<UPBS.Data.UPBSTracker>())
+            {
+                tracker.RefreshTID();
             }
             
         }

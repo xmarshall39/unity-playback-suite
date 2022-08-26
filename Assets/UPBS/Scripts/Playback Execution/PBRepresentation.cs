@@ -1,18 +1,28 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-public class PBRepresentation : MonoBehaviour
+using UPBS.Data;
+namespace UPBS.Execution
 {
-    // Start is called before the first frame update
-    void Start()
+    [RequireComponent(typeof(PBTrackerID))]
+    public abstract class PBRepresentation : PBFrameControllerUpdateListener
     {
-        
-    }
+        protected PBTrackerID trackerID;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+        protected virtual void Start()
+        {
+            if(!TryGetComponent(out trackerID))
+            {
+                Debug.LogError($"Tracker ID not found on representation {gameObject.name}");
+            }
+        }
+
+        public override void Refresh()
+        {
+            var frameData = PBFrameLibraryManager.Instance.GetCurrentLibraryEntry(trackerID.ID) as PBCameraFrameData;
+            transform.position = frameData.WorldPosition;
+            transform.eulerAngles = frameData.EulerRotation;
+        }
     }
 }
+

@@ -20,6 +20,11 @@ namespace UXF
         public string objectName;
 
         /// <summary>
+        /// Tracker type will determine the save directory for a Tracker
+        /// </summary>
+        public virtual UXFDataType UXFDType => UXFDataType.AdditionalTrackers;
+
+        /// <summary>
         /// Description of the type of measurement this tracker will perform.
         /// </summary>
         public abstract string MeasurementDescriptor { get; }  
@@ -32,7 +37,7 @@ namespace UXF
         /// <summary>
         /// A name used when saving the data from this tracker.
         /// </summary>
-        public string DataName
+        public virtual string DataName
         {
             get
             {

@@ -14,6 +14,24 @@ namespace UPBS.Utility
             return a;
         }
 
+        public static T[] Concat<T>(this T[] a, params T[][] bs)
+        {
+            if (a == null) throw new ArgumentNullException("a");
+            int progLen = a.Length;
+            int fullLength = a.Length;
+            foreach (var b in bs) fullLength += b.Length;
+            Array.Resize<T>(ref a, fullLength);
+            
+            foreach (var b in bs)
+            {
+                if (b == null) throw new ArgumentNullException("b");
+                Array.Copy(b, 0, a, progLen, b.Length);
+                progLen += b.Length;
+            }
+
+            return a;
+        }
+
         public static string ErrorVal(this int i) => "-1";
         public static string ErrorVal(this float f) => "-1.0";
         public static string[] ErrorVals(this Vector3 v) => new string[] { "-1.0", "-1.0", "-1.0" };
@@ -46,6 +64,38 @@ namespace UPBS.Utility
                 $"{baseName}_1_0", $"{baseName}_1_1", $"{baseName}_1_2", $"{baseName}_1_3",
                 $"{baseName}_2_0", $"{baseName}_2_1", $"{baseName}_2_2", $"{baseName}_2_3",
                 $"{baseName}_3_0", $"{baseName}_3_1", $"{baseName}_3_2", $"{baseName}_3_3"
+            };
+        }
+
+
+        public static string[] HeaderAppends(this Vector3 _)
+        {
+            return new string[] { "x", "y", "z" };
+        }
+        public static string[] HeaderAppends(this Vector3Int _)
+        {
+            return new string[] { "x", "y", "z" };
+        }
+        public static string[] HeaderAppends(this Vector2 _)
+        {
+            return new string[] { "x", "y" };
+        }
+        public static string[] HeaderAppends(this Vector2Int _)
+        {
+            return new string[] { "x", "y" };
+        }
+        public static string[] HeaderAppends(this Quaternion _)
+        {
+            return new string[] { "x", "y", "z", "w" };
+        }
+
+        public static string[] HeaderAppends(this Matrix4x4 _)
+        {
+            return new string[] {
+                "0_0", "0_1", "0_2", "0_3",
+                "1_0", "1_1", "1_2", "1_3",
+                "2_0", "2_1", "2_2", "2_3",
+                "3_0", "3_1", "3_2", "3_3"
             };
         }
 

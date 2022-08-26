@@ -7,7 +7,7 @@ namespace UPBS.Data
     public class PBFrameParser
     {
         private readonly static char[] TRIM_CHARS = { '\n', ' ', '\t', '\r', '\b', '\f', '\v', '\0' };
-                public Dictionary<string, int> Columns { get; private set; }
+        public Dictionary<string, int> Columns { get; private set; }
         
         public bool IsInitialized() => Columns != null && Columns.Keys.Count > 0;
         public bool Initialize(string[] columnNames)
@@ -31,11 +31,7 @@ namespace UPBS.Data
         /// <summary>
         /// Retrieve a string from 'vals' by translating the desired column 'key' into a 'vals' index
         /// </summary>
-        /// <param name="key"></param>
-        /// <param name="vals"></param>
-        /// <param name="rowNumber"></param>
-        /// <returns></returns>
-        public string GetColumnValue(string key, string[] vals, int rowNumber)
+        public string GetColumnValue(string key, string[] fullRow, int rowNumber)
         {
             key = key.Trim(TRIM_CHARS);
             if (!Columns.ContainsKey(key))
@@ -43,14 +39,14 @@ namespace UPBS.Data
                 Debug.LogWarning($"Provided key \"{key}\" is not a key in the column dictionary!");
                 return "0";
             }
-            else if (Columns[key] >= vals.Length)
+            else if (Columns[key] >= fullRow.Length)
             {
                 Debug.LogWarning($"Found data column {Columns[key]} is not in range of row {rowNumber}'s provided values");
                 return "0";
             }
             else
             {
-                string value = vals[Columns[key]].Trim(TRIM_CHARS);
+                string value = fullRow[Columns[key]].Trim(TRIM_CHARS);
 
                 if (string.IsNullOrEmpty(value))
                 {
@@ -62,6 +58,39 @@ namespace UPBS.Data
                 }
             }
         }
+
+        public string[] GetColumnValues(string keyBase, string[] fullRow, int rowNumber, params string[] appends)
+        {
+            keyBase = keyBase.Trim(TRIM_CHARS);
+            string[] result = new string[appends.Length];
+            for(int i = 0; i < appends.Length; ++i)
+            {
+                string key = string.Format("{0}_{1}", keyBase, appends[i]);
+                result[i] = GetColumnValue(key, fullRow, rowNumber);
+            }
+            return result;
+        }
+
+        public bool GetColumnValuesAsFloats(string keyBase, string[] fullRow, int rowNumber, out float[] floatValues, params string[] appends)
+        {
+            string[] stringValues = GetColumnValues(keyBase, fullRow, rowNumber, appends);
+            floatValues = new float[stringValues.Length];
+
+            for(int i = 0; i < floatValues.Length; ++i)
+            {
+                if (float.TryParse(stringValues[i], out float temp))
+                {
+                    floatValues[i] = temp;
+                }
+
+                else
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
     }
 
     /// <summary>
@@ -70,7 +99,7 @@ namespace UPBS.Data
     /// This effectively synchronizes the functionality of data collection with the expectations of playback.
     /// </summary>
     [System.Serializable]
-    public abstract class PBFrameDataBase
+    public abstract class PBFrameDataBase : ICloneable
     {
         public int Timestamp { get; private set; } = 0;
 
@@ -126,10 +155,6 @@ namespace UPBS.Data
         {
             return new string[] { "Timestamp" };
         }
-
-
-
-
 
         #region Quick Display Methods
         public string[] GetVariableNamesDisplayAuto()
@@ -192,6 +217,11 @@ namespace UPBS.Data
             };
         }
         #endregion
+
+        public object Clone()
+        {
+            return MemberwiseClone();
+        }
     }
 }
 

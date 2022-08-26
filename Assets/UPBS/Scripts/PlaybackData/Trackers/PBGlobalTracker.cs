@@ -9,9 +9,10 @@ namespace UPBS.Data
     {
         public override PBFrameDataBase FrameDataType { get => new PBGlobalFrameData(); }
 
+        public override UXFDataType UXFDType => UXFDataType.PBMandatory;
         public override string MeasurementDescriptor => base.MeasurementDescriptor + UPBS.Constants.UPBS_GLOBAL_DESC;
 
-        public override void Start()
+        protected override void Start()
         {
             base.Start();
             if (PBGlobalFrameRate.Instance == null)

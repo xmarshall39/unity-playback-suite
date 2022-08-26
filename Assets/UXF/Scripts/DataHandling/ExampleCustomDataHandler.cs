@@ -122,7 +122,11 @@ namespace UXF.Examples
         {
             // No cleanup is needed in this case. But you can add any code here that will be run when the session finishes.
         }
-        
+
+        public override string HandleJSONSerializableObject(object serializableObject, string experiment, string ppid, int sessionNum, string dataName, UXFDataType dataType, int optionalTrialNumber)
+        {
+            throw new NotImplementedException();
+        }
     }
 
 }

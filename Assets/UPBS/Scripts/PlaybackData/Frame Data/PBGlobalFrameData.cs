@@ -4,7 +4,7 @@ namespace UPBS.Data
 {
     public class PBGlobalFrameData : PBFrameDataBase
     {
-        public int FPS;
+        public int FPS { get; protected set; }
 
         public PBGlobalFrameData() : base()
         {

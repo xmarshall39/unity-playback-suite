@@ -30,6 +30,11 @@ namespace UXF.Tests
             return String.Empty;
         }
 
+        public override string HandleJSONSerializableObject(object serializableObject, string experiment, string ppid, int sessionNum, string dataName, UXFDataType dataType, int optionalTrialNumber = 0)
+        {
+            return String.Empty;
+        }
+
         public override string HandleJSONSerializableObject(List<object> serializableObject, string experiment, string ppid, int sessionNum, string dataName, UXFDataType dataType, int optionalTrialNumber = 0)
         {
             return String.Empty;

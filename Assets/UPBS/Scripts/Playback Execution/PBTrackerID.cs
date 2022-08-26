@@ -19,7 +19,7 @@ namespace UPBS.Execution
 
         [SerializeField, ReadOnly]
         private bool _isInitialized = false;
-        public bool IsInitialized 
+        public bool IsInitialized
         {
             get
             {
@@ -48,6 +48,7 @@ namespace UPBS.Execution
                 type = tracker.GetType();
                 return true;
             }
+
             else
             {
                 type = null;

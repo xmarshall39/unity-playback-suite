@@ -175,6 +175,18 @@ namespace UXF
             }
         }
 
+        public void SaveJSONSerializableObject(object serializableObject, string dataName, UXFDataType dataType = UXFDataType.OtherTrialData)
+        {
+            if (!CheckDataTypeIsValid(dataName, dataType)) dataType = UXFDataType.OtherTrialData;
+
+            int i = 0;
+            foreach (var dataHandler in session.ActiveDataHandlers)
+            {
+                string location = dataHandler.HandleJSONSerializableObject(serializableObject, session.experimentName, session.ppid, session.number, dataName, dataType, number);
+                result[string.Format("{0}_location_{1}", dataName, i++)] = location.Replace("\\", "/");
+            }
+        }
+
         /// <summary>
         /// Saves a JSON Serializable Object to the storage locations(s) for this trial. A column will be added in the trial_results CSV listing the location(s) of these data.
         /// </summary>
@@ -264,7 +276,18 @@ namespace UXF
                 try
                 {
                     tracker.StopRecording();
-                    SaveDataTable(tracker.Data, tracker.DataName, dataType: UXFDataType.Trackers);
+                    SaveDataTable(tracker.Data, tracker.DataName, dataType: tracker.UXFDType);
+                    UPBS.Data.UPBSTracker PBTracker = tracker as UPBS.Data.UPBSTracker;
+                    if (PBTracker)
+                    {
+                        UPBS.Data.PBTrackerInfo trackerInfo = new UPBS.Data.PBTrackerInfo()
+                        {
+                            frameDataAssemblyName = PBTracker.FrameDataType.GetType().AssemblyQualifiedName,
+                            TID = PBTracker.TrackerID.ID
+                        };
+                        SaveJSONSerializableObject(trackerInfo, tracker.DataName, tracker.UXFDType);
+                    }
+                    
                 }
                 catch (NullReferenceException)
                 {

@@ -199,5 +199,29 @@ namespace UXF
             string path = Path.Combine(experiment, ppid, FileSaver.SessionNumToName(sessionNum));
             return path;
         }
+
+        public override string HandleJSONSerializableObject(object serializableObject, string experiment, string ppid, int sessionNum, string dataName, UXFDataType dataType, int optionalTrialNumber)
+        {
+            // get data as text
+            string text = JsonUtility.ToJson(serializableObject);
+
+            string ext = Path.GetExtension(dataName);
+            dataName = Path.GetFileNameWithoutExtension(dataName);
+
+            if (dataType.GetDataLevel() == UXFDataLevel.PerTrial) dataName = string.Format("{0}_T{1:000}", dataName, optionalTrialNumber);
+
+            string directory = GetSessionPathRelative(experiment, ppid, sessionNum);
+            if (dataType != UXFDataType.TrialResults) directory = Path.Combine(directory, dataType.ToLower());
+
+            string name = string.IsNullOrEmpty(ext) ? string.Format("{0}.json", dataName) : string.Format("{0}{1}", dataName, ext);
+            string savePath = Path.Combine(directory, name);
+            savePath = savePath.Replace('\\', '/');
+
+            // here we send our data request
+            AuthenticatedRequest(savePath, text);
+
+            // return a string representing the location of the data. Will be stored in the trial_results output.
+            return savePath;
+        }
     }
 }

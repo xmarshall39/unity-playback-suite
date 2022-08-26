@@ -22,6 +22,7 @@ namespace UXF
         public abstract string HandleDataTable(UXFDataTable table, string experiment, string ppid, int sessionNum, string dataName, UXFDataType dataType, int optionalTrialNumber = 0);
         public abstract string HandleJSONSerializableObject(List<object> serializableObject, string experiment, string ppid, int sessionNum, string dataName, UXFDataType dataType, int optionalTrialNumber = 0);
         public abstract string HandleJSONSerializableObject(Dictionary<string, object> serializableObject, string experiment, string ppid, int sessionNum, string dataName, UXFDataType dataType, int optionalTrialNumber = 0);
+        public abstract string HandleJSONSerializableObject(object serializableObject, string experiment, string ppid, int sessionNum, string dataName, UXFDataType dataType, int optionalTrialNumber);
         public abstract string HandleText(string text, string experiment, string ppid, int sessionNum, string dataName, UXFDataType dataType, int optionalTrialNumber = 0);
         public abstract string HandleBytes(byte[] bytes, string experiment, string ppid, int sessionNum, string dataName, UXFDataType dataType, int optionalTrialNumber = 0);
         public virtual void CleanUp() { }
@@ -46,7 +47,7 @@ namespace UXF
 
     public enum UXFDataType
     {
-        TrialResults, SessionLog, Settings, ParticipantDetails, Trackers, SummaryStatistics, OtherTrialData, OtherSessionData
+        TrialResults, SessionLog, Settings, ParticipantDetails, AdditionalTrackers, SummaryStatistics, OtherTrialData, OtherSessionData, PBMandatory, PBAdditionalTrackerInfo 
     }
 
     public enum UXFDataLevel
@@ -68,10 +69,26 @@ namespace UXF
                 case UXFDataType.ParticipantDetails:
                 case UXFDataType.SummaryStatistics:
                     return "session_info";
-                case UXFDataType.Trackers:
-                    return "trackers";
+                case UXFDataType.AdditionalTrackers:
+                    if (Session.instance)
+                    {
+                        return System.IO.Path.Combine(string.Format("Trial_{0}", Session.instance.currentTrialNum), UPBS.Constants.ADDITIONAL_DATA_DIR);
+                    }
+                    return UPBS.Constants.ADDITIONAL_DATA_DIR;
+                case UXFDataType.PBMandatory:
+                    if (Session.instance)
+                    {
+                        return System.IO.Path.Combine(string.Format("Trial_{0}", Session.instance.currentTrialNum), UPBS.Constants.MANDATORY_DATA_DIR);
+                    }
+                    return UPBS.Constants.MANDATORY_DATA_DIR;
+                case UXFDataType.PBAdditionalTrackerInfo:
+                    if (Session.instance)
+                    {
+                        return System.IO.Path.Combine(string.Format("Trial_{0}", Session.instance.currentTrialNum), UPBS.Constants.ADDITIONAL_DATA_DIR);
+                    }
+                    return UPBS.Constants.ADDITIONAL_DATA_DIR;
                 default:
-                    return "other";
+                    return "Other";
             }
         }
 
@@ -83,8 +100,10 @@ namespace UXF
             { UXFDataType.ParticipantDetails, UXFDataLevel.PerSession },
             { UXFDataType.SummaryStatistics, UXFDataLevel.PerSession },
             { UXFDataType.OtherSessionData, UXFDataLevel.PerSession },
-            { UXFDataType.Trackers, UXFDataLevel.PerTrial },
-            { UXFDataType.OtherTrialData, UXFDataLevel.PerTrial }
+            { UXFDataType.AdditionalTrackers, UXFDataLevel.PerTrial },
+            { UXFDataType.OtherTrialData, UXFDataLevel.PerTrial },
+            { UXFDataType.PBMandatory, UXFDataLevel.PerTrial },
+            { UXFDataType.PBAdditionalTrackerInfo, UXFDataLevel.PerTrial },
         };
 
         public static UXFDataLevel GetDataLevel(this UXFDataType dt)

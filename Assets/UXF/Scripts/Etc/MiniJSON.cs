@@ -519,6 +519,11 @@ namespace MiniJSON
                     Vector2 v = (Vector2)value;
                     SerializeObject(new Dictionary<string, object>{ { "x", v.x }, { "y", v.y } }, ref level);
                 }
+                else if (value is UPBS.Data.PBTrackerInfo)
+                {
+                    UPBS.Data.PBTrackerInfo i = (UPBS.Data.PBTrackerInfo)value;
+                    SerializeObject(new Dictionary<string, object> { { "TID", i.TID }, { "frameDataAssemblyName", i.frameDataAssemblyName } }, ref level);
+                }
                 else
                 {
                     SerializeOther(value);

@@ -169,6 +169,28 @@ namespace UXF
             return GetRelativePath(StoragePath, savePath);
         }
 
+        public override string HandleJSONSerializableObject(object serializableObject, string experiment, string ppid, int sessionNum, string dataName, UXFDataType dataType, int optionalTrialNum = 0)
+        {
+            string ext = Path.GetExtension(dataName);
+            dataName = Path.GetFileNameWithoutExtension(dataName);
+
+            if (dataType.GetDataLevel() == UXFDataLevel.PerTrial) dataName = string.Format("{0}_T{1:000}", dataName, optionalTrialNum);
+
+            string text = JsonUtility.ToJson(serializableObject);
+
+            string directory = GetSessionPath(experiment, ppid, sessionNum);
+            if (sortDataIntoFolders && dataType != UXFDataType.TrialResults) directory = Path.Combine(directory, dataType.GetFolderName());
+            Directory.CreateDirectory(directory);
+            string name = string.IsNullOrEmpty(ext) ? string.Format("{0}.json", dataName) : string.Format("{0}{1}", dataName, ext);
+            string savePath = Path.Combine(directory, name);
+
+            if (verboseDebug) Utilities.UXFDebugLogFormat("Queuing save of file: {0}", savePath);
+
+            ManageInWorker(() => { File.WriteAllText(savePath, text); });
+            return GetRelativePath(StoragePath, savePath); ;
+        }
+
+
         public override string HandleJSONSerializableObject(List<object> serializableObject, string experiment, string ppid, int sessionNum, string dataName, UXFDataType dataType, int optionalTrialNum = 0)
         {
             string ext  = Path.GetExtension(dataName);

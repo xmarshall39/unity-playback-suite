@@ -212,6 +212,7 @@ namespace UXF
             return HandleText(content, experiment, ppid, sessionNum, dataName, dataType, optionalTrialNum);
         }
 
+
         /// <summary>
         /// Handles a string. Should not normally be called by the user. Instead, call session.SaveBytes() or trial.SaveBytes().
         /// </summary>
@@ -477,8 +478,13 @@ namespace UXF
                     return false;
             }
         }
-# endif
-        
+
+        public override string HandleJSONSerializableObject(object serializableObject, string experiment, string ppid, int sessionNum, string dataName, UXFDataType dataType, int optionalTrialNumber)
+        {
+            return HandleText(JsonUtility.ToJson(serializableObject), experiment, ppid, sessionNum, dataName, dataType, optionalTrialNumber);
+        }
+#endif
+
     }
 
     public class DynamoDBCreationQuery
