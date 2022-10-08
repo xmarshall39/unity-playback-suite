@@ -1,7 +1,7 @@
-﻿using UnityEditor;
-using UnityEngine;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using UnityEditor;
+using UnityEngine;
 
 [ExecuteAlways]
 public class GeneratePlaybackScene : MonoBehaviour
@@ -35,26 +35,24 @@ public class GeneratePlaybackScene : MonoBehaviour
     public bool includeDerivedClassesInReplication; //Eventually do this on a class-by-class basis
     public PlaybackRepicationPrecisionSettings replicationPrecision; 
 
-    [ContextMenu("RecursionTest")]
-    public void TraverseHierarchy()
+    private void ReplicateFullHierarchy(List<GameObject> roots, Transform replicationParent)
     {
-        List<GameObject> roots = new List<GameObject>();
-        foreach(GameObject go in UnityEditor.SceneManagement.EditorSceneManager.GetActiveScene().GetRootGameObjects())
+        foreach(GameObject go in roots)
         {
-            TraverseHeirarchy_Internal(go);
+            ReplicateFullHierarchy_Internal(go, replicationParent);
         }
-
-        
     }
 
-    private void TraverseHeirarchy_Internal(GameObject go)
+    private void ReplicateFullHierarchy_Internal(GameObject originalGameObject, Transform replicationParent)
     {
-        for(int i = 0; i < go.transform.childCount; ++i)
+        GameObject replicatedCurrent = ReplicateGameObject(originalGameObject, replicationParent);
+        for (int i = 0; i < originalGameObject.transform.childCount; ++i)
         {
-            TraverseHeirarchy_Internal(go.transform.GetChild(i).gameObject);
+            GameObject replicatedChild = ReplicateGameObject(originalGameObject.transform.GetChild(i).gameObject, replicatedCurrent.transform);
+            ReplicateFullHierarchy_Internal(originalGameObject.transform.GetChild(i).gameObject, replicatedChild.transform);
         }
-
-        print(go.name);
+        
+        print(originalGameObject.name);
     }
 
     private bool TrySaveScenes(UnityEngine.SceneManagement.Scene[] scenes)
@@ -87,9 +85,13 @@ public class GeneratePlaybackScene : MonoBehaviour
         return allClear;
     }
 
-    private void ReplicateGameObject(GameObject go, Transform parent)
+    private GameObject ReplicateGameObject(GameObject originalGameObject, Transform parent)
     {
-        Component[] comps = go.GetComponents<Component>();
+        if(originalGameObject == null)
+        {
+            return null;
+        }
+        Component[] comps = originalGameObject.GetComponents<Component>();
         GameObject replicatedClone = null;
         bool validRepComponentFound = false;
 
@@ -97,6 +99,7 @@ public class GeneratePlaybackScene : MonoBehaviour
         {
             SerializableSystemType componentType = new SerializableSystemType(comp.GetType());
             if (
+                replicationPrecision == PlaybackRepicationPrecisionSettings.Exact ||
                 cosmeticTypes.Contains(componentType) ||
                 (includeDerivedClassesInReplication && cosmeticTypes.Any(x=>componentType.SystemType.IsSubclassOf(x.SystemType)))
                 )
@@ -108,8 +111,8 @@ public class GeneratePlaybackScene : MonoBehaviour
 
         if (validRepComponentFound)
         {
-            replicatedClone = Instantiate(go);
-            replicatedClone.name = go.name;
+            replicatedClone = Instantiate(originalGameObject);
+            replicatedClone.name = originalGameObject.name;
             replicatedClone.transform.parent = parent;
             Component[] replicatedComps = replicatedClone.GetComponents<Component>();
             //EditorUtility.CopySerialized(repGo, replicatedClone);
@@ -124,6 +127,8 @@ public class GeneratePlaybackScene : MonoBehaviour
                 }
             }
         }
+
+        return replicatedClone;
     }
 
     [ContextMenu("generate scene")]
@@ -164,20 +169,29 @@ public class GeneratePlaybackScene : MonoBehaviour
                     roots.AddRange(scene.GetRootGameObjects());
                 }
 
-                List<GameObject> allGameObjects = new List<GameObject>();
-                foreach(var go in roots)
-                {
-                    allGameObjects.Add(go);
-                    //allGameObjects.AddRange(go.transform.child)
-                }
+                
 
                 var newScene = UnityEditor.SceneManagement.EditorSceneManager.NewScene(UnityEditor.SceneManagement.NewSceneSetup.EmptyScene, UnityEditor.SceneManagement.NewSceneMode.Additive);
                 GameObject replicationParent = new GameObject();
                 replicationParent.name = "=== Generated Environment ===";
-                foreach(var go in allGameObjects)
+                switch (replicationPrecision)
                 {
-                    ReplicateGameObject(go, replicationParent.transform);
+                    case PlaybackRepicationPrecisionSettings.Exact:
+                        ReplicateFullHierarchy(roots, replicationParent.transform);
+                        break;
+
+
+                    default:
+                        List<GameObject> allGameObjects = new List<GameObject>();
+                        foreach (var go in roots)
+                        {
+                            allGameObjects.Add(go);
+                            //allGameObjects.AddRange(go.transform.child)
+                        }
+                        break;
                 }
+                
+                
 
                 //Now we do some cleanup...
                 //Do we build lighting?
