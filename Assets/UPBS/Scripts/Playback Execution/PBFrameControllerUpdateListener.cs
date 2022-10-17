@@ -7,10 +7,12 @@ namespace UPBS.Execution
     {
         protected virtual void OnEnable()
         {
-            if (PBFrameControllerManager.Instance)
-            {
-                PBFrameControllerManager.Instance.OnFrameUpdate += Refresh;
-            }
+            PBFrameController.OnFrameUpdate += Refresh;
+        }
+
+        protected virtual void OnDisable()
+        {
+            PBFrameController.OnFrameUpdate -= Refresh;
         }
         public abstract void Refresh();
     }

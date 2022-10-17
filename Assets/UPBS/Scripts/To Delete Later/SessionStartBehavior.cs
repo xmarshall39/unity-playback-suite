@@ -27,7 +27,7 @@ namespace UPBS.Temporary
                 }
 
                 //Now we're gonna just manually create some blocks...
-                session.CreateBlock(1);
+                session.CreateBlock(3);
 
                 session.onSessionEnd.AddListener(MarkSessionOver);
                 session.FirstTrial.Begin();

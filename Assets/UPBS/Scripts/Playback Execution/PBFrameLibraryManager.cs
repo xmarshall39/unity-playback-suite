@@ -40,7 +40,11 @@ namespace UPBS.Execution
 
         //All of this stuff is populated during environment generation
         public List<int> TIDs;
+        public int GlobalTID { get => _globalTID; set => _globalTID = value; }
+        public void SetGlobalTID(int tid) => _globalTID = tid;
         //public List<PBFrameType> 
+        private int _globalTID;
+        
         private Dictionary<int, (System.Type, List<PBFrameDataBase>)> library;
         private Dictionary<System.Type, PBFrameParser> parserDictionary;
         private ConcurrentDictionary<System.Type, PBFrameParser> _parserDictionary;
@@ -69,6 +73,10 @@ namespace UPBS.Execution
                 if (frame.ParseRow(parserDictionary[type], fullFile[i].Split(','), i))
                 {
                     trackerFrames.Add(frame);
+                    if (frame is PBCameraFrameData)
+                    {
+                        print(((PBCameraFrameData)frame).WorldPosition);
+                    }
                 }
 
                 else
@@ -96,7 +104,12 @@ namespace UPBS.Execution
 
         public PBFrameDataBase GetCurrentLibraryEntry(int TID)
         {
-            return library[TID].Item2[PBFrameControllerManager.Instance.CurrentFrame].Clone() as PBFrameDataBase;
+            return library[TID].Item2[PBFrameController.Instance.CurrentFrame].Clone() as PBFrameDataBase;
+        }
+
+        public List<PBFrameDataBase> GetGlobalFrameData()
+        {
+            return new List<PBFrameDataBase>(library[GlobalTID].Item2);
         }
 
         /// <summary>

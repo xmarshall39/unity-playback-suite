@@ -283,6 +283,7 @@ namespace UXF
                         UPBS.Data.PBTrackerInfo trackerInfo = new UPBS.Data.PBTrackerInfo()
                         {
                             frameDataAssemblyName = PBTracker.FrameDataType.GetType().AssemblyQualifiedName,
+                            originalSceneName = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name,
                             TID = PBTracker.TrackerID.ID
                         };
                         SaveJSONSerializableObject(trackerInfo, tracker.DataName, tracker.UXFDType);

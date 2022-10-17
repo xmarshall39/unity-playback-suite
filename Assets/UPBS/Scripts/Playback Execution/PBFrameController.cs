@@ -2,17 +2,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UPBS.Data;
+using System.Linq;
+using UnityEngine.UI;
 
 namespace UPBS.Execution
 {
     /// <summary>
     /// Using the collected [GlobalFrameData or CameraFrameData] as a base, this will update the simulation progress
     /// </summary>
-    public class PBFrameControllerManager : MonoBehaviour
+    public class PBFrameController : MonoBehaviour
     {
         #region Singleton
-        private static PBFrameControllerManager _instance;
-        public static PBFrameControllerManager Instance
+        private static PBFrameController _instance;
+        public static PBFrameController Instance
         {
             get
             {
@@ -34,20 +36,24 @@ namespace UPBS.Execution
         #region Variables
         //PRIVATE FIELDS
         private int _currentFrame = 0;
+        [SerializeField, Range(1, 60)]
         private float _speed = 1f;
         private bool _isInitialized = false;
         private bool _fwdRunning, _rwdRunning;
         private Coroutine _fwdRoutine, _rwdRoutine;
         private List<PBGlobalFrameData> _fullFrameData;
-        
+
+        [SerializeField]
+        private Slider frameProgressBar; //Move this to a UI script
+
         //PUBLIC FIELDS
         public delegate void FrameUpdate();
         public delegate void PlaybackUpdate();
-        public event FrameUpdate OnFrameUpdate;
-        public event PlaybackUpdate OnPlay;
-        public event PlaybackUpdate OnPlayForward;
-        public event PlaybackUpdate OnPlayBackward;
-        public event PlaybackUpdate OnPaused;
+        public static event FrameUpdate OnFrameUpdate;
+        public static event PlaybackUpdate OnPlay;
+        public static event PlaybackUpdate OnPlayForward;
+        public static event PlaybackUpdate OnPlayBackward;
+        public static event PlaybackUpdate OnPaused;
 
         //PUBLIC PROPERTIES
         public int CurrentFrame
@@ -59,6 +65,7 @@ namespace UPBS.Execution
             private set
             {
                 _currentFrame = value;
+                frameProgressBar.value = value;
                 OnFrameUpdate?.Invoke();
             }
         }
@@ -77,25 +84,18 @@ namespace UPBS.Execution
         #endregion
         #region Functions
         //PUBLIC MEMBER FUNCTIONS
-        public void Initialize(PBFrameParser globalParser, string[] dataRows)
+
+        ///Get global frame data from the frame library
+        public void Initialize()
         {
             _fullFrameData = new List<PBGlobalFrameData>();
-            for (int i = 1; i < dataRows.Length; i++)
-            {
-                var frame = new PBGlobalFrameData();
-                if(frame.ParseRow(globalParser, dataRows[i].Split(','), i))
-                {
-                    _fullFrameData.Add(frame);
-                }
-
-                else
-                {
-                    Debug.LogWarning($"Unable to parse row {i}");
-                }
-                
-            }
-            
+            _fullFrameData = PBFrameLibraryManager.Instance.GetGlobalFrameData().Cast<PBGlobalFrameData>().ToList();
+            FinalFrame = _fullFrameData.Count - 1;
+            frameProgressBar.minValue = 1;
+            frameProgressBar.maxValue = _fullFrameData.Count;
+            frameProgressBar.value = 1;
             _isInitialized = true;
+            Debug.Log(_fullFrameData.Count);
         }
         public void Clear()
         {

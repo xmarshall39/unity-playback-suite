@@ -5,6 +5,7 @@ using UnityEngine;
 using TMPro;
 using System.IO;
 using UPBS.Data;
+using UnityEngine.SceneManagement;
 
 namespace UPBS.Execution
 {
@@ -27,6 +28,7 @@ namespace UPBS.Execution
             if (_instance == null)
             {
                 _instance = this;
+                DontDestroyOnLoad(this.gameObject);
             }
             else
             {
@@ -35,62 +37,20 @@ namespace UPBS.Execution
         }
         #endregion
 
-        private string _trailDataPath = "";
-        public TextMeshProUGUI displayText;
-        public string TrialDataPath 
+        public bool DirectoryValidated { get; private set; }
+        private PBTrackerInfo globalTrackerInfo, cameraTrackerInfo;
+        private string globalTrackerPath = null, cameraTrackerPath = null;
+        public bool ValidateDirectory(string trialDataPath, out string baseSceneName)
         {
-            get
-            {
-                return _trailDataPath;
-            } 
-            
-            private set 
-            { 
-                displayText.text = value;
-                PlayerPrefs.SetString(UPBS.Constants.LAST_TRIAL_DIRECTORY, value);
-                _trailDataPath = value;
-            } 
-        }
-
-        private void Start()
-        {
-            if (PlayerPrefs.HasKey(UPBS.Constants.LAST_TRIAL_DIRECTORY))
-            {
-                TrialDataPath = PlayerPrefs.GetString(UPBS.Constants.LAST_TRIAL_DIRECTORY);
-            }
-        }
-
-        public void SetTrialDirectory()
-        {
-#if UNITY_STANDALONE_WIN || UNITY_EDITOR_WIN || UNITY_STANDALONE_LINUX || UNITY_EDITOR_LINUX || UNITY_STANDALONE_OSX || UNITY_EDITOR_OSX
-            string[] selected = SFB.StandaloneFileBrowser.OpenFolderPanel("Select data directory", TrialDataPath, false);
-            if (selected != null && selected.Length > 0)
-            {
-                TrialDataPath = selected[0];
-            }
-#else
-            Utilities.UXFDebugLogError("Cannot select directory unless on PC platform!");
-#endif
-        }
-
-        /// <summary>
-        /// This should load in all of our Tracker data provided a base directory.
-        /// This is also the start of our Manager initialization chain (not actually a chain)
-        /// </summary>
-        public void Load()
-        {
-            //TODO: Implement a comprehensive file search system
-            //FileLocation: [TrialDir]/[MandatoryTrackerDir]/[gameobjectName]_UPBSTracker_Global_[TrialNumber].csv
-            //So we check for non-variable substrings by splitting by underscore
-            //When I fork UXF, I might make the measurement descriptor static...
-            string globalTrackerPath = null;
+            baseSceneName = "";
+            globalTrackerPath = null;
             string globalInfoPath = null;
-            string cameraTrackerPath = null;
+            cameraTrackerPath = null;
             string cameraInfoPath = null;
 
-            string mandatoryFilePath = Path.Combine(TrialDataPath, Constants.MANDATORY_DATA_DIR);
-            
-            foreach(var file in Directory.GetFiles(mandatoryFilePath))
+            string mandatoryFilePath = Path.Combine(trialDataPath, Constants.MANDATORY_DATA_DIR);
+
+            foreach (var file in Directory.GetFiles(mandatoryFilePath))
             {
                 string fileName = Path.GetFileName(file);
                 if (string.IsNullOrEmpty(fileName))
@@ -104,8 +64,8 @@ namespace UPBS.Execution
                 if (Path.GetExtension(file) == Constants.TRACKER_EXTENSION)
                 {
                     string[] fileNameSplit = fileName.Split(Constants.FILENAME_DELIM);
-                    
-                    foreach(string segment in fileNameSplit)
+
+                    foreach (string segment in fileNameSplit)
                     {
                         if (segment == Constants.UPBS_TRACKER_DESC)
                         {
@@ -117,17 +77,17 @@ namespace UPBS.Execution
                         }
                         if (segment == Constants.UPBS_CAMERA_DESC)
                         {
-                            
+
                             camTagFound = true;
                         }
                     }
 
-                    if(trackerTagFound && camTagFound && globalTagFound)
+                    if (trackerTagFound && camTagFound && globalTagFound)
                     {
                         Debug.LogWarning($"{file} has tags for both a Camera tracker and Global tracker.");
                     }
 
-                    else if(trackerTagFound && camTagFound)
+                    else if (trackerTagFound && camTagFound)
                     {
                         cameraTrackerPath = file;
                     }
@@ -164,39 +124,78 @@ namespace UPBS.Execution
                         globalInfoPath = file;
                     }
                 }
-                
+
             }
 
             if (globalTrackerPath == null)
             {
                 Debug.LogWarning("Global Tracker Path not found!");
-                return;
+                DirectoryValidated = false;
+                return false;
             }
             if (globalInfoPath == null)
             {
                 Debug.LogWarning("Global Info Path not found!");
-                return;
+                DirectoryValidated = false;
+                return false;
             }
             if (cameraTrackerPath == null)
             {
                 Debug.LogWarning("Camer Tracker Path not found!");
-                return;
+                DirectoryValidated = false;
+                return false;
             }
             if (cameraInfoPath == null)
             {
                 Debug.LogWarning("Camera Info Path not found!");
-                return;
+                DirectoryValidated = false;
+                return false;
             }
 
             print(JsonUtility.ToJson(new PBTrackerInfo()));
 
-            PBTrackerInfo globalTrackerInfo = JsonUtility.FromJson<PBTrackerInfo>(File.ReadAllText(globalInfoPath));
+            globalTrackerInfo = JsonUtility.FromJson<PBTrackerInfo>(File.ReadAllText(globalInfoPath));
             print(JsonUtility.ToJson(globalTrackerInfo));
-            PBTrackerInfo cameraTrackerInfo = JsonUtility.FromJson<PBTrackerInfo>(File.ReadAllText(cameraInfoPath));
+            cameraTrackerInfo = JsonUtility.FromJson<PBTrackerInfo>(File.ReadAllText(cameraInfoPath));
             if (!globalTrackerInfo.IsValid() || !cameraTrackerInfo.IsValid())
             {
                 Debug.LogWarning("Unable to parse mandatory tracker info");
-                return;
+                DirectoryValidated = false;
+                return false;
+            }
+
+            DirectoryValidated = true;
+            baseSceneName = globalTrackerInfo.originalSceneName;
+            return true;
+        }
+
+        public void Load(string trialDataPath, string playbackSceneName)
+        {
+            StartCoroutine(Load_Internal(trialDataPath, playbackSceneName));
+        }
+
+        /// <summary>
+        /// This should load in all of our Tracker data provided a base directory.
+        /// This is also the start of our Manager initialization chain (not actually a chain)
+        /// </summary>
+        public IEnumerator Load_Internal(string trialDataPath, string playbackSceneName)
+        {
+            //TODO: Implement a comprehensive file search system
+            //FileLocation: [TrialDir]/[MandatoryTrackerDir]/[gameobjectName]_UPBSTracker_Global_[TrialNumber].csv
+            //So we check for non-variable substrings by splitting by underscore
+            //When I fork UXF, I might make the measurement descriptor static...
+            
+            if (DirectoryValidated == false)
+            {
+                Debug.LogWarning("Provided Data Path not validated!");
+                yield break;
+            }
+
+            yield return SceneManager.LoadSceneAsync(playbackSceneName);
+            yield return null;
+            if(PBFrameLibraryManager.Instance == null)
+            {
+                Debug.LogWarning("No lib found in new scene");
             }
 
             if 
@@ -206,16 +205,23 @@ namespace UPBS.Execution
             )
             {
                 Debug.LogError("Unable to add mandatory Library entry!");
-                return;
+                yield break;
             }
 
+
+            PBFrameLibraryManager.Instance.SetGlobalTID(globalTrackerInfo.TID);
             Debug.Log("Mandatory trackers successfully loaded in the dictionary");
+            string additionalFilePath = Path.Combine(trialDataPath, Constants.ADDITIONAL_DATA_DIR);
+            string[] additionalFiles = Directory.GetFiles(additionalFilePath);
+            UPBS.UI.LoadingBar.Instance?.BeginLoading(additionalFiles.Length);
 
             Dictionary<int, TrackerProcessor> processingDict = new Dictionary<int, TrackerProcessor>();
 
-            string additionalFilePath = Path.Combine(TrialDataPath, Constants.ADDITIONAL_DATA_DIR);
-            foreach(var file in Directory.GetFiles(additionalFilePath))
+            
+            foreach(var file in additionalFiles)
             {
+                //Update the loading bar early so we prompt it to completion slightly before loading is done
+                UPBS.UI.LoadingBar.Instance?.UpdateProgress(1);//This will need to be async to work.
                 string fileName = Path.GetFileName(file);
                 string fileNameSansExtension = Path.GetFileNameWithoutExtension(file);
                 if (string.IsNullOrEmpty(fileName))
@@ -242,7 +248,8 @@ namespace UPBS.Execution
                         PBTrackerInfo info = JsonUtility.FromJson<PBTrackerInfo>(File.ReadAllText(fileName));
                         processingDict[tid].TrackerInfo = info;
                     }
-                }   
+                }
+                yield return null;
             }
 
             //TODO: Implement a threaded solution to loading
@@ -253,10 +260,11 @@ namespace UPBS.Execution
             //Whatever we got, it's probably fine. Most parsing issues for basic trackers aren't critical.
             //So unless something exceptional happens, we're good.
             PBFrameLibraryManager.Instance.CleanUp();
+            PBFrameController.Instance?.Initialize(); // Make this event-based later
             //IN PARALLELL: Any external data should be loaded as well as determined by the developer. Let's assume that's all done for now...
 
             //With all our loading complete, we can now enable the FrameControllerManager and then Initialize the UI
-
+            UPBS.UI.LoadingBar.Instance?.FinishLoading();
         }
 
         private async Task MyTask(int i)

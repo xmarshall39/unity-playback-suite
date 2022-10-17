@@ -36,7 +36,7 @@ namespace UPBS.Data
 
             if (parser.GetColumnValuesAsFloats("EulerRotation", row, rowNumber, out vals, EulerRotation.HeaderAppends()))
             {
-                WorldPosition = new Vector3(vals[0], vals[1], vals[2]);
+                EulerRotation = new Vector3(vals[0], vals[1], vals[2]);
             }
 
             else

@@ -8,13 +8,15 @@ namespace UPBS.Execution
     {
         public override void Refresh()
         {
+            base.Refresh();
+            Debug.Log("Refreshed");
             // PBFrameDataBase curr = PBFrameLibraryManager.
             // transform.position = 
         }
 
         protected override void Start()
         {
-
+            base.Start();
         }
 
     }

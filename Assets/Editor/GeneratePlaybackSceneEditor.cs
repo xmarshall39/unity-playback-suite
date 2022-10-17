@@ -2,45 +2,49 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
-//Good reference: https://docs.unity3d.com/ScriptReference/Editor.html
-[CustomEditor(typeof(GeneratePlaybackScene))]
-public class GeneratePlaybackSceneEditor : Editor
+
+namespace UPBS
 {
-    SerializedProperty cosmeticTypesProp;
-
-    private void OnEnable()
+    //Good reference: https://docs.unity3d.com/ScriptReference/Editor.html
+    [CustomEditor(typeof(GeneratePlaybackScene))]
+    public class GeneratePlaybackSceneEditor : Editor
     {
-        cosmeticTypesProp = serializedObject.FindProperty("cosmeticTypes");
-        //cosmeticTypesProp.InsertArrayElementAtIndex
-    }
+        SerializedProperty cosmeticTypesProp;
 
-    public override void OnInspectorGUI()
-    {
-        serializedObject.Update();
-        ShowList(cosmeticTypesProp);
-        
-        base.OnInspectorGUI();
-        serializedObject.ApplyModifiedProperties();
-    }
-
-    public static void ShowList(SerializedProperty list)
-    {
-        if (!list.isArray)
+        private void OnEnable()
         {
-            EditorGUILayout.HelpBox(list.name + " is neither an array nor a list!", MessageType.Error);
-            return;
+            cosmeticTypesProp = serializedObject.FindProperty("cosmeticTypes");
+            //cosmeticTypesProp.InsertArrayElementAtIndex
         }
 
-        EditorGUILayout.PropertyField(list);
-        EditorGUI.indentLevel += 1;
-
-
-        for (int i = 0; i < list.arraySize; ++i)
+        public override void OnInspectorGUI()
         {
-            EditorGUILayout.PropertyField(list.GetArrayElementAtIndex(i));
+            serializedObject.Update();
+            ShowList(cosmeticTypesProp);
+
+            base.OnInspectorGUI();
+            serializedObject.ApplyModifiedProperties();
         }
-        
-        
-        EditorGUI.indentLevel -= 1;
+
+        public static void ShowList(SerializedProperty list)
+        {
+            if (!list.isArray)
+            {
+                EditorGUILayout.HelpBox(list.name + " is neither an array nor a list!", MessageType.Error);
+                return;
+            }
+
+            EditorGUILayout.PropertyField(list);
+            EditorGUI.indentLevel += 1;
+
+
+            for (int i = 0; i < list.arraySize; ++i)
+            {
+                EditorGUILayout.PropertyField(list.GetArrayElementAtIndex(i));
+            }
+
+
+            EditorGUI.indentLevel -= 1;
+        }
     }
 }
