@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UPBS.Execution;
 using UXF;
 
 namespace UPBS.Data
@@ -8,6 +9,7 @@ namespace UPBS.Data
     public class PBGlobalTracker : UPBSTracker
     {
         public override PBFrameDataBase FrameDataType { get => new PBGlobalFrameData(); }
+        public override System.Type ReflectionType => typeof(PBGlobalReflection);
 
         public override UXFDataType UXFDType => UXFDataType.PBMandatory;
         public override string MeasurementDescriptor => base.MeasurementDescriptor + UPBS.Constants.UPBS_GLOBAL_DESC;

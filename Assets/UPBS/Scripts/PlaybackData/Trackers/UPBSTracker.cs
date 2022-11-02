@@ -10,6 +10,7 @@ namespace UPBS.Data
         private int TID = -1;
 
         public abstract PBFrameDataBase FrameDataType { get; }
+        public abstract System.Type ReflectionType { get; }
         public PBTrackerID TrackerID { get; private set; }
 
         public override IEnumerable<string> CustomHeader => FrameDataType.GetClassHeader();
