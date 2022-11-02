@@ -1,12 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UPBS.Execution;
 using UXF;
 namespace UPBS.Data
 {
     public class PBCameraTracker : UPBSTracker
     {
         public override PBFrameDataBase FrameDataType { get => new PBCameraFrameData(); }
+        public override System.Type ReflectionType => typeof(PBCameraReflection);
 
         public override string MeasurementDescriptor => base.MeasurementDescriptor + UPBS.Constants.UPBS_CAMERA_DESC;
         public override UXFDataType UXFDType => UXFDataType.PBMandatory;

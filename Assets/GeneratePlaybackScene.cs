@@ -145,9 +145,26 @@ namespace UPBS
                 replicatedClone.name = originalGameObject.name;
                 replicatedClone.transform.parent = parent;
                 Component[] replicatedComps = replicatedClone.GetComponents<Component>();
-                //EditorUtility.CopySerialized(repGo, replicatedClone);
+                
+                List<System.Type> reflectionsToAdd = new List<System.Type>();
                 for (int i = replicatedComps.Length - 1; i > 0; --i) //Automatically exclude the Transform component
                 {
+                    //If we have a UPBS Tracker, get ready to add a Reflection
+                    Data.UPBSTracker trackerComponent = replicatedComps[i] as UPBS.Data.UPBSTracker;
+                    if (trackerComponent)
+                    {
+                        if (trackerComponent.ReflectionType.IsInstanceOfType(typeof(UPBS.Execution.PBReflection)))
+                        {
+                            reflectionsToAdd.Add(trackerComponent.ReflectionType);
+                        }
+
+                        else
+                        {
+                            Debug.LogWarning($"ReflectionType field of {trackerComponent.GetType().Name} must inherit from the class PBReflection");
+                        }
+                        
+                    }
+
                     SerializableSystemType replicatedComponentType = new SerializableSystemType(replicatedComps[i].GetType());
                     if (!cosmeticTypes.Contains(replicatedComponentType) &&
                         !(includeDerivedClassesInReplication && cosmeticTypes.Any(x => replicatedComponentType.SystemType.IsSubclassOf(x.SystemType)))
@@ -155,6 +172,10 @@ namespace UPBS
                     {
                         DestroyImmediate(replicatedComps[i]);
                     }
+                }
+                foreach(var reflectionType in reflectionsToAdd)
+                {
+                    gameObject.AddComponent(reflectionType);
                 }
             }
 
