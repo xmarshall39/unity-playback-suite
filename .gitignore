@@ -67,3 +67,4 @@ $RECYCLE.BIN/
 example_output/*
 
 Assets/MyAWSCredentials.asset*
+*.log

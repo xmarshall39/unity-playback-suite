@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+using UnityEditor.Experimental.GraphView;
 
 namespace UPBS
 {
@@ -36,25 +37,19 @@ namespace UPBS
             useDerivedClassesProp = serializedObject.FindProperty("useDerivedClasses");
             listLength = cosmeticTypesProp.arraySize;
             deleteButtonContent = new GUIContent(EditorGUIUtility.IconContent("P4_DeletedLocal").image); //@2x
-
-            foreach (System.Reflection.Assembly assembly in System.AppDomain.CurrentDomain.GetAssemblies())
-            {
-                foreach (System.Type type in assembly.GetTypes())
-                {
-                    if (type.IsSubclassOf(typeof(Component)))
-                    {
-                        ComponentData cd = new ComponentData() { type = type, assembly = assembly };
-                        components.Add(cd);
-                        Debug.Log(cd);
-                    }
-                }
-            }
         }
 
         public override void OnInspectorGUI()
         {
             serializedObject.Update();
             ShowList(cosmeticTypesProp, useDerivedClassesProp);
+            if (GUILayout.Button(new GUIContent("Add Component")))
+            {
+                var searchProvider = CreateInstance<ComponentSearchProvider>();
+                var searchWindowContext = new SearchWindowContext(GUIUtility.GUIToScreenPoint(Event.current.mousePosition));
+                SearchWindow.Open(searchWindowContext, searchProvider);
+                Debug.Log("Here");
+            }
 
             base.OnInspectorGUI();
             serializedObject.ApplyModifiedProperties();
@@ -81,7 +76,7 @@ namespace UPBS
                         EditorGUILayout.Toggle(false);
                         if(GUILayout.Button(deleteButtonContent, EditorStyles.miniButton))
                         {
-                            Debug.Log("Delete Butto Pushed");
+                            Debug.Log("Delete Button Pushed");
                         }
                         //EditorGUILayout.PropertyField(boolList.GetArrayElementAtIndex(i));
                     }
