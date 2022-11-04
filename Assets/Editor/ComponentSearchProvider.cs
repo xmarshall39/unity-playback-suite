@@ -18,6 +18,7 @@ public class ComponentSearchProvider : ScriptableObject, ISearchWindowProvider
         }
     }
 
+    private Action<Type> onSetIndexCallback;
     private List<ComponentData> components = null;
     private static readonly Dictionary<string, string> AssemblyDirectories = new Dictionary<string, string>()
     {
@@ -92,11 +93,17 @@ public class ComponentSearchProvider : ScriptableObject, ISearchWindowProvider
 
                 }
             }
+            components.Sort((c1, c2) => c1.assemblyDirectory.CompareTo(c2.assemblyDirectory));
         }
     }
     private void OnDisable()
     {
         components = null;
+    }
+
+    public void AssignCallback(Action<Type> callback)
+    {
+        onSetIndexCallback = callback;
     }
 
     public List<SearchTreeEntry> CreateSearchTree(SearchWindowContext context)
@@ -122,7 +129,7 @@ public class ComponentSearchProvider : ScriptableObject, ISearchWindowProvider
             }
             SearchTreeEntry entry = new SearchTreeEntry(new GUIContent(entrySplit[entrySplit.Length - 1]));
             entry.level = entrySplit.Length;
-            entry.userData = entrySplit[entrySplit.Length - 1];
+            entry.userData = comp.type;
             searchList.Add(entry);
         }
 
@@ -131,7 +138,8 @@ public class ComponentSearchProvider : ScriptableObject, ISearchWindowProvider
 
     public bool OnSelectEntry(SearchTreeEntry SearchTreeEntry, SearchWindowContext context)
     {
-        return false;
+        onSetIndexCallback?.Invoke((Type)SearchTreeEntry.userData);
+        return true;
     }
 
 

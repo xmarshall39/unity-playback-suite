@@ -10,7 +10,7 @@ namespace UPBS
     {
         [HideInInspector]
 
-        public SerializableSystemType[] cosmeticTypes = new SerializableSystemType[]
+        public List<SerializableSystemType> cosmeticTypes = new List<SerializableSystemType>
         {
         new SerializableSystemType(typeof(UPBS.Execution.PBTrackerID)),
         new SerializableSystemType(typeof(MeshRenderer)),
@@ -20,7 +20,7 @@ namespace UPBS
         };
 
         [HideInInspector]
-        public bool[] useDerivedClasses = new bool[]
+        public List<bool> useDerivedClasses = new List<bool>
         {
             true, true, true, true, true
         };
