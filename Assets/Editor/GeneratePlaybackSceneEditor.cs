@@ -21,7 +21,7 @@ namespace UPBS
             {
                 Debug.Log("Clear");
             }
-            cosmeticTypesProp = serializedObject.FindProperty("cosmeticTypes");
+            cosmeticTypesProp = serializedObject.FindProperty("replicationTypes");
             useDerivedClassesProp = serializedObject.FindProperty("useDerivedClasses");
             listLength = cosmeticTypesProp.arraySize;
             deleteButtonContent = new GUIContent(EditorGUIUtility.IconContent("P4_DeletedLocal").image); //@2x
@@ -29,9 +29,9 @@ namespace UPBS
 
         private void AddComponent(System.Type type)
         {
-            if (!sceneGenerator.cosmeticTypes.Contains(new SerializableSystemType(type)))
+            if (!sceneGenerator.replicationTypes.Contains(new SerializableSystemType(type)))
             {
-                sceneGenerator.cosmeticTypes.Add(new SerializableSystemType(type));
+                sceneGenerator.replicationTypes.Add(new SerializableSystemType(type));
                 sceneGenerator.useDerivedClasses.Add(false);
             }
 
@@ -44,7 +44,7 @@ namespace UPBS
         private void RemoveAt(int index)
         {
             Debug.Log(index);
-            sceneGenerator.cosmeticTypes.RemoveAt(index);
+            sceneGenerator.replicationTypes.RemoveAt(index);
             sceneGenerator.useDerivedClasses.RemoveAt(index);
         }
 
@@ -79,7 +79,7 @@ namespace UPBS
                 using (new EditorGUILayout.HorizontalScope())
                 {
                     DrawVerticalLine(Color.gray, 1);
-                    GUILayout.Label("Reflection Types", EditorStyles.boldLabel);
+                    GUILayout.Label("Replication Types", EditorStyles.boldLabel);
                     DrawVerticalLine(Color.gray, 1);
                 }
 
@@ -95,7 +95,8 @@ namespace UPBS
                             DrawVerticalLine(Color.gray, 1);
                             EditorGUILayout.PropertyField(cosmeticList.GetArrayElementAtIndex(i));
                             DrawVerticalLine(Color.gray, 1);
-                            EditorGUILayout.Toggle(boolList.GetArrayElementAtIndex(i).boolValue);
+                            sceneGenerator.useDerivedClasses[i] = EditorGUILayout.Toggle(boolList.GetArrayElementAtIndex(i).boolValue);
+
                             DrawVerticalLine(Color.gray, 1);
                             if (GUILayout.Button(deleteButtonContent, EditorStyles.miniButton))
                             {

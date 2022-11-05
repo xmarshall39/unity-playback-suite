@@ -5,26 +5,54 @@ namespace UPBS.Data
 {
     public class PBTrackerFrameData : PBFrameDataBase
     {
-        public Matrix4x4 transformMatrix;
-        public Vector3 position;
-        public Vector3 eulerRotation;
+        public Vector3 WorldPosition { get; protected set; } = Vector3.zero;
+        public Vector3 EulerRotation { get; protected set; } = Vector3.zero;
+
+        public PBTrackerFrameData() : base()
+        {
+
+        }
 
         public PBTrackerFrameData(PBTrackerFrameData other) : base(other)
         {
-            this.transformMatrix = other.transformMatrix;
-            this.position = other.position;
-            this.eulerRotation = other.eulerRotation;
+            this.WorldPosition = other.WorldPosition;
+            this.EulerRotation = other.EulerRotation;
+        }
+
+        protected override bool ParseRowInternal(PBFrameParser parser, string[] row, int rowNumber)
+        {
+            bool allClear = base.ParseRowInternal(parser, row, rowNumber);
+
+            if (parser.GetColumnValuesAsFloats("WorldPosition", row, rowNumber, out float[] vals, WorldPosition.HeaderAppends()))
+            {
+                WorldPosition = new Vector3(vals[0], vals[1], vals[2]);
+            }
+
+            else
+            {
+                allClear = false;
+                Debug.LogWarning($"WorldPosition value in row {rowNumber} could not be parsed!");
+            }
+
+            if (parser.GetColumnValuesAsFloats("EulerRotation", row, rowNumber, out vals, EulerRotation.HeaderAppends()))
+            {
+                EulerRotation = new Vector3(vals[0], vals[1], vals[2]);
+            }
+
+            else
+            {
+                allClear = false;
+                Debug.LogWarning($"EulerRotation value in row {rowNumber} could not be parsed!");
+            }
+
+            return allClear;
         }
 
         public override string[] GetClassHeader()
         {
-            return HelperFunctions.ConcatArrays
-            (
-                base.GetClassHeader(),
-                transformMatrix.Header("TransformationMatrix"),
-                position.Header("Position"),
-                eulerRotation.Header("EulerRotation")
-            );
+            return base.GetClassHeader().Concat(
+                WorldPosition.Header("WorldPosition"),
+                EulerRotation.Header("EulerRotation"));
         }
 
         public override string[] GetVariableValuesDisplay()
@@ -42,18 +70,5 @@ namespace UPBS.Data
             throw new System.NotImplementedException();
         }
     }
-    /*
-    /// <summary>
-    /// Move this to a file for examples and use in a later experiment with custom data fields
-    /// </summary>
-    public class PBFTrackerFrameDataCustom : PBTrackerFrameData
-    {
-        public Vector4 inputAxes;
-        public override string[] GetVariableNames()
-        {
-            return base.GetVariableNames();
-        }
-    }
-    */
 }
 

@@ -10,7 +10,7 @@ namespace UPBS
     {
         [HideInInspector]
 
-        public List<SerializableSystemType> cosmeticTypes = new List<SerializableSystemType>
+        public List<SerializableSystemType> replicationTypes = new List<SerializableSystemType>
         {
         new SerializableSystemType(typeof(UPBS.Execution.PBTrackerID)),
         new SerializableSystemType(typeof(MeshRenderer)),
@@ -103,8 +103,8 @@ namespace UPBS
                 SerializableSystemType componentType = new SerializableSystemType(child.GetType());
                 if
                     (
-                    cosmeticTypes.Contains(componentType) ||
-                    (includeDerivedClassesInReplication && cosmeticTypes.Any(x => componentType.SystemType.IsSubclassOf(x.SystemType)))
+                    replicationTypes.Contains(componentType) ||
+                    (includeDerivedClassesInReplication && replicationTypes.Any(x => componentType.SystemType.IsSubclassOf(x.SystemType)))
                     )
                 {
                     hasCosmeticChildren = true;
@@ -130,8 +130,8 @@ namespace UPBS
                 SerializableSystemType componentType = new SerializableSystemType(comp.GetType());
                 if (
                     replicationPrecision == PlaybackRepicationPrecisionSettings.Exact ||
-                    cosmeticTypes.Contains(componentType) ||
-                    (includeDerivedClassesInReplication && cosmeticTypes.Any(x => componentType.SystemType.IsSubclassOf(x.SystemType)))
+                    replicationTypes.Contains(componentType) ||
+                    (includeDerivedClassesInReplication && replicationTypes.Any(x => componentType.SystemType.IsSubclassOf(x.SystemType)))
                     )
                 {
                     validRepComponentFound = true;
@@ -166,8 +166,8 @@ namespace UPBS
                     }
 
                     SerializableSystemType replicatedComponentType = new SerializableSystemType(replicatedComps[i].GetType());
-                    if (!cosmeticTypes.Contains(replicatedComponentType) &&
-                        !(includeDerivedClassesInReplication && cosmeticTypes.Any(x => replicatedComponentType.SystemType.IsSubclassOf(x.SystemType)))
+                    if (!replicationTypes.Contains(replicatedComponentType) &&
+                        !(includeDerivedClassesInReplication && replicationTypes.Any(x => replicatedComponentType.SystemType.IsSubclassOf(x.SystemType)))
                         )
                     {
                         DestroyImmediate(replicatedComps[i]);

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using System.Reflection;
 using System;
@@ -108,6 +109,10 @@ public class ComponentSearchProvider : ScriptableObject, ISearchWindowProvider
 
     public List<SearchTreeEntry> CreateSearchTree(SearchWindowContext context)
     {
+        if(onSetIndexCallback == null)
+        {
+            Debug.LogWarning("No Search Tree Callback has been assigned");
+        }
         CreateComponentTree();
         List<SearchTreeEntry> searchList = new List<SearchTreeEntry>();
         searchList.Add(new SearchTreeGroupEntry(new GUIContent("Components"), 0));
@@ -127,7 +132,8 @@ public class ComponentSearchProvider : ScriptableObject, ISearchWindowProvider
                 }
                 groupName += "/";
             }
-            SearchTreeEntry entry = new SearchTreeEntry(new GUIContent(entrySplit[entrySplit.Length - 1]));
+            
+            SearchTreeEntry entry = new SearchTreeEntry(new GUIContent(entrySplit[entrySplit.Length - 1], EditorGUIUtility.ObjectContent(null, comp.type).image));
             entry.level = entrySplit.Length;
             entry.userData = comp.type;
             searchList.Add(entry);
