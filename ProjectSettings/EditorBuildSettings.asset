@@ -35,4 +35,7 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Testing/AWS1HourTest.unity
     guid: 446013cde4af0f6489957921c51d090c
+  - enabled: 1
+    path: Assets/UPBS/Test/Scenes/TestDataEntry-PLAYBACK-ver1.unity
+    guid: b97d69c35bb2cc14d9e0379370ac1f41
   m_configObjects: {}

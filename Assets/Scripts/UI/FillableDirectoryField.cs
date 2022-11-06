@@ -87,7 +87,7 @@ namespace UPBS.UI
             for(int i = 0; i < SceneManager.sceneCountInBuildSettings; ++i)
             {
                 string sceneName = System.IO.Path.GetFileNameWithoutExtension(SceneUtility.GetScenePathByBuildIndex(i));
-                if (sceneName.StartsWith(baseSceneName) /*&& sceneName.EndsWith("Playback")*/ && sceneName != baseSceneName)
+                if (sceneName.StartsWith(baseSceneName) && sceneName.Contains(Constants.PLAYBACK_SCENE_NAME_TAG) && sceneName != baseSceneName)
                 {
                     validScenes.Add(sceneName);
                 }

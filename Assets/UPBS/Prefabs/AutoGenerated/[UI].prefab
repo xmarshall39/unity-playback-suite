@@ -660,7 +660,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 5714208391670980065}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 6799371147758035220}
+        m_TargetAssemblyTypeName: 
+        m_MethodName: PlayBackward
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &1629026855563390824
 GameObject:
   m_ObjectHideFlags: 0
@@ -1035,7 +1047,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 981121397541893340}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 6799371147758035220}
+        m_TargetAssemblyTypeName: 
+        m_MethodName: PlayForward
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &4664208990872930839
 GameObject:
   m_ObjectHideFlags: 0
@@ -1251,7 +1275,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 5437561809012964280}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 6799371147758035220}
+        m_TargetAssemblyTypeName: 
+        m_MethodName: TogglePlayback
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &7122680868350935915
 GameObject:
   m_ObjectHideFlags: 0
@@ -1264,6 +1300,7 @@ GameObject:
   - component: {fileID: 7122680868350935895}
   - component: {fileID: 7122680868350935912}
   - component: {fileID: 7122680868350935913}
+  - component: {fileID: 6799371147758035220}
   m_Layer: 0
   m_Name: Playback HUD
   m_TagString: Untagged
@@ -1355,6 +1392,20 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &6799371147758035220
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7122680868350935915}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6832882600c0ad84f8a247d165a0702c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _speed: 40
+  frameProgressBar: {fileID: 1107807925}
 --- !u!1 &7122680869085687314
 GameObject:
   m_ObjectHideFlags: 0

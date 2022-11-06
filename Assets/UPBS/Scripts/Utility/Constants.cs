@@ -23,6 +23,7 @@ namespace UPBS
         //public readonly static string[] CAM_TRACKER_DIR = new string[] {"Mandatory Trackers", ""}
         public readonly static string PB_EXPORT_DIR = "Playback Export";
         public readonly static string ADDITIONAL_PB_INFO_DIR = "Additional Playback Info";
+        public readonly static string PLAYBACK_SCENE_NAME_TAG = "-PLAYBACK-";
 
 
         #region Player Pref Keys

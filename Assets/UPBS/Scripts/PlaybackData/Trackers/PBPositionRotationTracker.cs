@@ -9,7 +9,7 @@ namespace UPBS.Data
     public class PBPositionRotationTracker : UPBSTracker
     {
         public override PBFrameDataBase FrameDataType => new PBTrackerFrameData();
-        public override Type ReflectionType => throw new NotImplementedException();
+        public override Type ReflectionType => typeof(UPBS.Execution.PBPositionRotationReflection);
 
         public override string MeasurementDescriptor => base.MeasurementDescriptor + UPBS.Constants.UPBS_POS_ROT_DESC;
         public override UXFDataType UXFDType => UXFDataType.AdditionalTrackers;

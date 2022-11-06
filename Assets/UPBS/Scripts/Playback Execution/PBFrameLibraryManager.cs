@@ -73,10 +73,6 @@ namespace UPBS.Execution
                 if (frame.ParseRow(parserDictionary[type], fullFile[i].Split(','), i))
                 {
                     trackerFrames.Add(frame);
-                    if (frame is PBCameraFrameData)
-                    {
-                        print(((PBCameraFrameData)frame).WorldPosition);
-                    }
                 }
 
                 else

@@ -223,7 +223,7 @@ namespace UPBS.Execution
                 //Update the loading bar early so we prompt it to completion slightly before loading is done
                 UPBS.UI.LoadingBar.Instance?.UpdateProgress(1);//This will need to be async to work.
                 string fileName = Path.GetFileName(file);
-                string fileNameSansExtension = Path.GetFileNameWithoutExtension(file);
+                // string fileNameSansExtension = Path.GetFileNameWithoutExtension(file);
                 if (string.IsNullOrEmpty(fileName))
                 {
                     continue;
@@ -240,12 +240,12 @@ namespace UPBS.Execution
 
                     if (Path.GetExtension(fileName) == Constants.TRACKER_EXTENSION)
                     {
-                        processingDict[tid].TrackerPath = fileName;
+                        processingDict[tid].TrackerPath = file;
                     }
 
                     else if (Path.GetExtension(fileName) == Constants.PB_INFO_EXTENSION)
                     {
-                        PBTrackerInfo info = JsonUtility.FromJson<PBTrackerInfo>(File.ReadAllText(fileName));
+                        PBTrackerInfo info = JsonUtility.FromJson<PBTrackerInfo>(File.ReadAllText(file));
                         processingDict[tid].TrackerInfo = info;
                     }
                 }
