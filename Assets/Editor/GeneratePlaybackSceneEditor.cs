@@ -73,48 +73,64 @@ namespace UPBS
                 return;
             }
 
+            Color originalContentColor = GUI.contentColor;
             using(new EditorGUI.IndentLevelScope(1))
             {
-                DrawHorizontalLine(Color.gray, thickness: 1, padding: 0);
-                using (new EditorGUILayout.HorizontalScope())
+                using (var vertScope = new EditorGUILayout.VerticalScope(new GUIStyle()))
                 {
-                    DrawVerticalLine(Color.gray, 1);
-                    GUILayout.Label("Replication Types", EditorStyles.boldLabel);
-                    DrawVerticalLine(Color.gray, 1);
-                }
-
-                System.Action RemovalAction = null;
-                if (cosmeticList.arraySize == boolList.arraySize)
-                {
-                    DrawHorizontalLine(Color.gray, thickness: 1, padding: 0);
-                    for (int i = 0; i < cosmeticList.arraySize; ++i)
+                    
+                    EditorGUI.DrawRect(vertScope.rect, UPBS.Constants.SECONDARY_COLOR);
+                    using (var header = new EditorGUILayout.HorizontalScope())
                     {
-                        using (new EditorGUILayout.HorizontalScope())
-                        {
-                            int x = i;
-                            DrawVerticalLine(Color.gray, 1);
-                            EditorGUILayout.PropertyField(cosmeticList.GetArrayElementAtIndex(i));
-                            DrawVerticalLine(Color.gray, 1);
-                            sceneGenerator.useDerivedClasses[i] = EditorGUILayout.Toggle(boolList.GetArrayElementAtIndex(i).boolValue);
+                        EditorGUI.DrawRect(header.rect, UPBS.Constants.BRAND_COLOR);
 
-                            DrawVerticalLine(Color.gray, 1);
-                            if (GUILayout.Button(deleteButtonContent, EditorStyles.miniButton))
-                            {
-                                RemovalAction = () => RemoveAt(x);
-                                Debug.Log("Delete Button Pushed");
-                            }
-                            DrawVerticalLine(Color.gray, 1);
-                            //EditorGUILayout.PropertyField(boolList.GetArrayElementAtIndex(i));
-                        }
+                        DrawVerticalLine(Color.gray, 1);
+                        GUI.contentColor = Color.black;
+                        GUILayout.Label("Replication Types", EditorStyles.boldLabel);
+                        GUI.contentColor = originalContentColor;
+                        DrawVerticalLine(Color.gray, 1);
+                    }
+
+                    System.Action RemovalAction = null;
+                    if (cosmeticList.arraySize == boolList.arraySize)
+                    {
                         DrawHorizontalLine(Color.gray, thickness: 1, padding: 0);
+                        for (int i = 0; i < cosmeticList.arraySize; ++i)
+                        {
+                            using (new EditorGUILayout.HorizontalScope())
+                            {
+                                int x = i;
+                                DrawVerticalLine(Color.gray, 1);
+
+                                GUI.contentColor = Color.black;
+                                EditorGUILayout.PropertyField(cosmeticList.GetArrayElementAtIndex(i), EditorStyles.miniBoldFont);
+                                GUI.contentColor = originalContentColor;
+
+                                DrawVerticalLine(Color.gray, 1);
+                                sceneGenerator.useDerivedClasses[i] = EditorGUILayout.Toggle(boolList.GetArrayElementAtIndex(i).boolValue);
+
+                                DrawVerticalLine(Color.gray, 1);
+                                if (GUILayout.Button(deleteButtonContent, EditorStyles.miniButton))
+                                {
+                                    RemovalAction = () => RemoveAt(x);
+                                    Debug.Log("Delete Button Pushed");
+                                }
+                                DrawVerticalLine(Color.gray, 1);
+                                //EditorGUILayout.PropertyField(boolList.GetArrayElementAtIndex(i));
+                            }
+                            DrawHorizontalLine(Color.gray, thickness: 1, padding: 0);
+                        }
+                    }
+
+                    if (RemovalAction != null)
+                    {
+                        RemovalAction.Invoke();
                     }
                 }
+                DrawHorizontalLine(Color.gray, thickness: 1, padding: 0);
 
-                if (RemovalAction != null)
-                {
-                    RemovalAction.Invoke();
-                }
             }
+            GUI.contentColor = originalContentColor;
         }
 
         public static void DrawHorizontalLine(Color color, int thickness = 2, int padding = 10, int xOffset = 0)
