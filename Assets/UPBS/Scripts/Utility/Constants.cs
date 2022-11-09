@@ -1,3 +1,5 @@
+using UnityEngine;
+
 namespace UPBS
 {
     public static class Constants
@@ -28,6 +30,12 @@ namespace UPBS
 
         #region Player Pref Keys
         public readonly static string LAST_TRIAL_DIRECTORY = "PB_LAST_TRIAL_DIRECTORY";
+        #endregion
+
+        #region Colors
+        public static Color NormalizeColor(float r, float g, float b) => new Color(r / 255, g / 255, b / 255);
+        public static UnityEngine.Color BRAND_COLOR => NormalizeColor(116, 184, 248);
+        public static UnityEngine.Color SECONDARY_COLOR => NormalizeColor(198, 228, 255);
         #endregion
 
     }
