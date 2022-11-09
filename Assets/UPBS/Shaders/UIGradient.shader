@@ -5,10 +5,10 @@ Shader "UPBS/UIGradient"
     Properties
     {
        [PerRendererData] _MainTex("Sprite Texture", 2D) = "white" {}
-       _Color("Left Color", Color) = (1,1,1,1)
-       _Color2("Right Color", Color) = (1,1,1,1)
+       _Color("_Color", Color) = (1,1,1,1)
+       _Color2("End Color", Color) = (1,1,1,1)
        _Scale("Scale", Float) = 1
-           _Alpha("Alpha", range(0.0, 1.0)) = 1
+       _Direction("Direction", Range(0, 3)) = 0
 
            // these six unused properties are required when a shader
            // is used in the UI system, or you get a warning.
@@ -41,6 +41,7 @@ Shader "UPBS/UIGradient"
             fixed4 _Color2;
             fixed  _Scale;
             fixed _Alpha;
+            fixed _Direction;
 
             struct v2f {
                 float4 pos : SV_POSITION;
@@ -51,7 +52,23 @@ Shader "UPBS/UIGradient"
             {
                 v2f o;
                 o.pos = UnityObjectToClipPos(v.vertex);
-                o.col = lerp(_Color,_Color2, v.texcoord.y);
+                float t = 1;
+                switch (floor(_Direction)) {
+                case 0:
+                    t = v.texcoord.y;
+                    break;
+                case 1:
+                    t = v.texcoord.x;
+                    break;
+                case 2:
+                    t = 1 - v.texcoord.y;
+                    break;
+                case 3:
+                    t = 1 - v.texcoord.x;
+                    break;
+                }
+                
+                o.col = lerp(_Color,_Color2, t * _Scale);
                 //            o.col = half4( v.vertex.y, 0, 0, 1);
                             return o;
             }
