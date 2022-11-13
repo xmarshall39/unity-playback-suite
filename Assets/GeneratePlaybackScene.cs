@@ -32,8 +32,7 @@ namespace UPBS
         {
             Exact, Partial, OnlyNecessary
         }
-        [Header("Settings")]
-        public bool replicateCurrentSceneOnly;
+        public bool replicateCurrentSceneOnly = true;
         [Tooltip("Automatically save the generated scene and add it to the project settings. If you're saving a scene manually, make sure it follows this format in order to be recognized at runtime: [ReplicatedSceneName]-PLAYBACK-")]
         public bool autoSaveGeneratedScene = true;
         public PlaybackRepicationPrecisionSettings replicationPrecision;

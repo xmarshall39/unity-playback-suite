@@ -36,6 +36,11 @@ namespace UPBS
         public static Color NormalizeColor(float r, float g, float b) => new Color(r / 255, g / 255, b / 255);
         public static UnityEngine.Color BRAND_COLOR => NormalizeColor(116, 184, 248);
         public static UnityEngine.Color SECONDARY_COLOR => NormalizeColor(198, 228, 255);
+        public static Color EDITOR_BRAND_COLOR_LIGHT = NormalizeColor(222, 55, 247);
+        public static Color EDITOR_BRAND_COLOR_DARK = NormalizeColor(51, 31, 50);
+        public static Color EDITOR_SECONDARY_BRAND_COLOR_LIGHT = NormalizeColor(222, 55, 247);
+        public static Color EDITOR_SECONDARY_BRAND_COLOR_DARK = NormalizeColor(61, 53, 63);
+        public static Color UNITY_ERROR_COLOR = NormalizeColor(222, 55, 247);
         #endregion
 
     }
