@@ -1,5 +1,5 @@
 # UPBS - Unity Playback Suite
-Built off the Unity Experiment Framework, UPBS is a collection of data analysis tools which allow for deterministic, frame-by-frame replays of experimental trials in their original environment. Feom there, developers can add additional visualizations and analysis directly in Unity.
+Built off the Unity Experiment Framework, UPBS is a collection of data analysis tools which allow for deterministic, frame-by-frame replays of experimental trials in their original environment. From there, developers can add additional visualizations and analysis directly in Unity.
 
 This project was recently displayed at the Psychonomic Society 2022 confrence and a digital version can be viewed here:
 <img src="media/UPBS_Poster.png" alt="Psychonomic Society 2022 poster">
@@ -13,8 +13,11 @@ Data collection paradigms and processes are implemented using UXF's source. Mino
 ###Playback Environment Generation
 Rather than dirtying the experimental environment, UPBS offers the ability to generate copies of said environment that carry over all information relevant to visual stimuli.
 
+### Frame-By-Frame Playback
+Scrub through each frame of trial data just as you would a video player with the ability to play in reverse and alter speed. The standard camera perspective in Playback environments is based on the subject's camera during data collection. However, you can add alternative camera perspectives or navigate the scene in 3D using the Free Camera.
+
 ### Data Visualization
-UPBS provides a straightforward coding framework for adding visualizations extrapolated from collected data
+UPBS provides a straightforward coding framework for adding visualizations extrapolated from collected data. Potential visualizations can include elements like raycasts, heatmaps, graph overlays, or other representations match an experimental paradigm.
 
 ### Additional Data Import
 For experimental setups that require the use of external tools for data collection, UPBS allows that data to be introduced to Unity and visualized alongside Unity-side data. Given potential differences in recording rate and data formatting, some unique restrictions may apply to external data.
