@@ -10,7 +10,8 @@ These tools are still early in development, but this page will receive updates a
 
 ### Data Collection
 Data collection paradigms and processes are implemented using UXF's source. Minor modifications are made to support Playback features, but implementing UXF is procedurally identical here.
-###Playback Environment Generation
+
+### Playback Environment Generation
 Rather than dirtying the experimental environment, UPBS offers the ability to generate copies of said environment that carry over all information relevant to visual stimuli.
 
 ### Frame-By-Frame Playback
