@@ -19,7 +19,8 @@ UPBS provides a straightforward coding framework for adding visualizations extra
 ### Additional Data Import
 For experimental setups that require the use of external tools for data collection, UPBS allows that data to be introduced to Unity and visualized alongside Unity-side data. Given potential differences in recording rate and data formatting, some unique restrictions may apply to external data.
 
-## Setup
+### Additional Data Export
+Since UPBS provides replays with all of the original environmental state information relevant at runtime, it also supports the ability to export additional data during playback. This is especially useful for processes that would compromise frame-rate during experimentation.
 
 ## Release Schedule
 The first UPBS package release is scheduled to drop January 3rd 2023.
