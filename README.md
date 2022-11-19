@@ -1,6 +1,9 @@
 # UPBS - Unity Playback Suite
 Built off the Unity Experiment Framework, UPBS is a collection of data analysis tools which allow for deterministic, frame-by-frame replays of experimental trials in their original environment. Feom there, developers can add additional visualizations and analysis directly in Unity.
 
+This project was recently displayed at the Psychonomic Society 2022 confrence and a digital version can be viewed here:
+<img src="media/UPBS_Poster.png" alt="Psychonomic Society 2022 poster">
+
 These tools are still early in development, but this page will receive updates as development progresses.
 
 ## Features
