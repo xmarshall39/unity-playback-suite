@@ -8,10 +8,11 @@ namespace UPBS.Execution
     {
         public override void Refresh()
         {
-            var frameData = PBFrameLibraryManager.Instance.GetCurrentLibraryEntry(trackerID.ID) as Data.PBTrackerFrameData;
-            transform.position = frameData.WorldPosition;
-            transform.eulerAngles = frameData.EulerRotation;
-
+            if (PBFrameLibraryManager.Instance.TryGetCurrentLibraryEntry<Data.PBTrackerFrameData>(trackerID.ID, out var frameData, name))
+            {
+                transform.position = frameData.WorldPosition;
+                transform.eulerAngles = frameData.EulerRotation;
+            }
         }
     }
 }

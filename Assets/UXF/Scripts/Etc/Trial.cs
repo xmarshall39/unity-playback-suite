@@ -280,11 +280,23 @@ namespace UXF
                     UPBS.Data.UPBSTracker PBTracker = tracker as UPBS.Data.UPBSTracker;
                     if (PBTracker)
                     {
+                        float recordingRate = 0;
+                        switch (PBTracker.updateType)
+                        {
+                            case TrackerUpdateType.FixedUpdate:
+                                recordingRate = Time.fixedDeltaTime;
+                                break;
+                            case TrackerUpdateType.LateUpdate:
+                                recordingRate = 1f / (float)PBGlobalFrameRate.Instance?.TargetFrameRate();
+                                break;
+                        }
+
                         UPBS.Data.PBTrackerInfo trackerInfo = new UPBS.Data.PBTrackerInfo()
                         {
                             frameDataAssemblyName = PBTracker.FrameDataType.GetType().AssemblyQualifiedName,
                             originalSceneName = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name,
-                            TID = PBTracker.TrackerID.ID
+                            TID = PBTracker.TrackerID.ID,
+                            recordingRate = recordingRate
                         };
                         SaveJSONSerializableObject(trackerInfo, tracker.DataName, tracker.UXFDType);
                     }

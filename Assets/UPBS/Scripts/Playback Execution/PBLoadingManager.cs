@@ -37,8 +37,11 @@ namespace UPBS.Execution
         }
         #endregion
 
+        public static string LoadedDirectory { get; private set; }
+
         public bool DirectoryValidated { get; private set; }
-        private PBTrackerInfo globalTrackerInfo, cameraTrackerInfo;
+        public PBTrackerInfo GlobalTrackerInfo { get; private set; } = null;
+        public PBTrackerInfo CameraTrackerInfo { get; private set; } = null;
         private string globalTrackerPath = null, cameraTrackerPath = null;
         public bool ValidateDirectory(string trialDataPath, out string baseSceneName)
         {
@@ -152,12 +155,10 @@ namespace UPBS.Execution
                 return false;
             }
 
-            print(JsonUtility.ToJson(new PBTrackerInfo()));
-
-            globalTrackerInfo = JsonUtility.FromJson<PBTrackerInfo>(File.ReadAllText(globalInfoPath));
-            print(JsonUtility.ToJson(globalTrackerInfo));
-            cameraTrackerInfo = JsonUtility.FromJson<PBTrackerInfo>(File.ReadAllText(cameraInfoPath));
-            if (!globalTrackerInfo.IsValid() || !cameraTrackerInfo.IsValid())
+            GlobalTrackerInfo = JsonUtility.FromJson<PBTrackerInfo>(File.ReadAllText(globalInfoPath));
+            print(JsonUtility.ToJson(GlobalTrackerInfo));
+            CameraTrackerInfo = JsonUtility.FromJson<PBTrackerInfo>(File.ReadAllText(cameraInfoPath));
+            if (!GlobalTrackerInfo.IsValid() || !CameraTrackerInfo.IsValid())
             {
                 Debug.LogWarning("Unable to parse mandatory tracker info");
                 DirectoryValidated = false;
@@ -165,7 +166,7 @@ namespace UPBS.Execution
             }
 
             DirectoryValidated = true;
-            baseSceneName = globalTrackerInfo.originalSceneName;
+            baseSceneName = GlobalTrackerInfo.originalSceneName;
             return true;
         }
 
@@ -200,8 +201,8 @@ namespace UPBS.Execution
 
             if 
             (
-                !PBFrameLibraryManager.Instance.AddLibraryEntry(globalTrackerInfo, File.ReadAllLines(globalTrackerPath)) ||
-                !PBFrameLibraryManager.Instance.AddLibraryEntry(cameraTrackerInfo, File.ReadAllLines(cameraTrackerPath))
+                !PBFrameLibraryManager.Instance.AddLibraryEntry(GlobalTrackerInfo, File.ReadAllLines(globalTrackerPath)) ||
+                !PBFrameLibraryManager.Instance.AddLibraryEntry(CameraTrackerInfo, File.ReadAllLines(cameraTrackerPath))
             )
             {
                 Debug.LogError("Unable to add mandatory Library entry!");
@@ -209,7 +210,7 @@ namespace UPBS.Execution
             }
 
 
-            PBFrameLibraryManager.Instance.SetGlobalTID(globalTrackerInfo.TID);
+            PBFrameLibraryManager.Instance.SetGlobalTID(GlobalTrackerInfo.TID);
             Debug.Log("Mandatory trackers successfully loaded in the dictionary");
             string additionalFilePath = Path.Combine(trialDataPath, Constants.ADDITIONAL_DATA_DIR);
             string[] additionalFiles = Directory.GetFiles(additionalFilePath);
@@ -252,6 +253,7 @@ namespace UPBS.Execution
                 yield return null;
             }
 
+            LoadedDirectory = trialDataPath;
             //TODO: Implement a threaded solution to loading
             //Okay, global data is loaded into the library. Now let's do this again for the camera tracker...
 

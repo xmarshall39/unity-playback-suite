@@ -19,6 +19,9 @@ namespace UPBS
         public readonly static string UPBS_GLOBAL_DESC = "-GLOBAL-";
         public readonly static string UPBS_CAMERA_DESC = "-CAMERA-";
         public readonly static string UPBS_POS_ROT_DESC = "-POS_ROT-";
+        public readonly static string UPBS_COL_DESC = "-COLOR-";
+        public readonly static string UPBS_SCALE_DESC = "-SCALE-";
+
 
         public readonly static string ADDITIONAL_DATA_DIR = "AdditionalTrackers";
         public readonly static string MANDATORY_DATA_DIR = "Mandatory";

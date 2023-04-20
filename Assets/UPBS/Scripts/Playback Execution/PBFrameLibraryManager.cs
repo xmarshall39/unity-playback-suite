@@ -4,15 +4,10 @@ using System.Collections.Concurrent;
 using UnityEngine;
 using UPBS.Data;
 using UPBS.Utility;
+using FrameDataCollection = System.Collections.Generic.SortedDictionary<ulong, UPBS.Data.PBFrameDataBase>;
 
 namespace UPBS.Execution
 {
-    public struct PBLibValue
-    {
-        public System.Type type;
-        public List<PBFrameDataBase> frameData;
-    }
-
     public class PBFrameLibraryManager : MonoBehaviour
     {
 
@@ -40,21 +35,25 @@ namespace UPBS.Execution
 
         //All of this stuff is populated during environment generation
         public List<int> TIDs;
-        public int GlobalTID { get => _globalTID; set => _globalTID = value; }
-        public void SetGlobalTID(int tid) => _globalTID = tid;
-        //public List<PBFrameType> 
-        private int _globalTID;
-        
-        private Dictionary<int, (System.Type, List<PBFrameDataBase>)> library;
+        public int GlobalTID { get; set; }
+        public void SetGlobalTID(int tid) => GlobalTID = tid;
+
+        private Dictionary< int, (System.Type, FrameDataCollection) > _library;
         private Dictionary<System.Type, PBFrameParser> parserDictionary;
         private ConcurrentDictionary<System.Type, PBFrameParser> _parserDictionary;
 
         private void Start()
         {
-            library = new Dictionary<int, (System.Type, List<PBFrameDataBase>)>();
+            _library = new Dictionary<int, (System.Type, FrameDataCollection)>();
             parserDictionary = new Dictionary<System.Type, PBFrameParser>();
         }
 
+        /// <summary>
+        /// Adds a tracker to the global frame library
+        /// </summary>
+        /// <param name="trackerInfo"></param>
+        /// <param name="fullFile"></param>
+        /// <returns>True on success</returns>
         public bool AddLibraryEntry(PBTrackerInfo trackerInfo, string[] fullFile)
         {
             System.Type type = System.Type.GetType(trackerInfo.frameDataAssemblyName);
@@ -65,14 +64,14 @@ namespace UPBS.Execution
                 parserDictionary[type].Initialize(fullFile[0].Split(',')); //new string[] { "time", "Playback_Info" }.Concat(parserTemplate.GetClassHeader())
             }
 
-            List<PBFrameDataBase> trackerFrames = new List<PBFrameDataBase>();
+            FrameDataCollection trackerFrames = new FrameDataCollection();
 
             for (int i = 1; i < fullFile.Length; i++)
             {
                 var frame = (PBFrameDataBase)System.Activator.CreateInstance(type);
                 if (frame.ParseRow(parserDictionary[type], fullFile[i].Split(','), i))
                 {
-                    trackerFrames.Add(frame);
+                    trackerFrames.Add(frame.Timestamp, frame);
                 }
 
                 else
@@ -82,7 +81,7 @@ namespace UPBS.Execution
 
             }
 
-            library[trackerInfo.TID] = (type, trackerFrames);
+            _library[trackerInfo.TID] = (type, trackerFrames);
 
             return true;
         }
@@ -90,26 +89,89 @@ namespace UPBS.Execution
         /// <summary>
         /// Returns a copy of a tracker's complete frame data list
         /// </summary>
-        /// <param name="TID"></param>
+        /// <param name="TID">Tracker ID</param>
         /// <param name="frameData"></param>
         /// <returns></returns>
-        public List<PBFrameDataBase> GetFullLibraryEntry(int TID)
+        public FrameDataCollection GetFullLibraryEntry(int TID)
         {
-            return new List<PBFrameDataBase>(library[TID].Item2);
+            return new FrameDataCollection(_library[TID].Item2);
         }
 
-        public PBFrameDataBase GetCurrentLibraryEntry(int TID)
+        public PBFrameDataBase GetCurrentLibraryEntry(int TID, string goName = "")
         {
-            return library[TID].Item2[PBFrameController.Instance.CurrentFrame].Clone() as PBFrameDataBase;
-        }
+            if (_library.ContainsKey(TID))
+            {
+                return _library[TID].Item2[PBFrameController.Instance.CurrentFrameKey].Clone() as PBFrameDataBase;
+            }
 
-        public List<PBFrameDataBase> GetGlobalFrameData()
-        {
-            return new List<PBFrameDataBase>(library[GlobalTID].Item2);
+            else
+            {
+                Debug.LogError($"TID ({TID}) on {goName} not found in the frame library! Make sure your TrackerID's in the original and playback scenes match!");
+                return null;
+            }
         }
 
         /// <summary>
-        /// Frees up memory we don't need after completing the library
+        /// Recieves the most recent frame recorded for a given tracker.
+        /// </summary>
+        /// <param name="TID">Tracker ID</param>
+        /// <param name="frameData">Tracker frame data if found. NULL if not found.</param>
+        /// <param name="goName">Debug parameter to help identify problematic tracker data</param>
+        /// <returns>True if a valid frameData was found</returns>
+        public bool TryGetCurrentLibraryEntry<T>(int TID, out T frameData, string goName = "") where T : PBFrameDataBase
+        {
+            frameData = null;
+
+            if (_library.ContainsKey(TID))
+            {
+                FrameDataCollection trackedFrames = _library[TID].Item2;
+                ulong currentTimestamp = PBFrameController.Instance.CurrentFrameKey;
+                if (trackedFrames.ContainsKey(currentTimestamp))
+                {
+                    frameData =  trackedFrames[PBFrameController.Instance.CurrentFrameKey].Clone() as T;
+                    return true;
+                }
+
+                // Try to find the latest timestamp that's before the current.
+                // Return false if no data was recorded prior to the current point in playback.
+                else
+                {
+                    ulong latestTimestamp = ulong.MaxValue;
+                    foreach (var kvp in trackedFrames)
+                    {
+                        if (kvp.Key > currentTimestamp)
+                        {
+                            break;
+                        }
+                        latestTimestamp = kvp.Key;
+                    }
+
+                    if (latestTimestamp == ulong.MaxValue)
+                    {
+                        return false;
+                    }
+
+                    else
+                    {
+                        frameData = trackedFrames[latestTimestamp] as T;
+                        return true;
+                    }
+                }
+            }
+
+            else
+            {
+                return false;
+            }
+        }
+
+        public FrameDataCollection GetGlobalFrameData()
+        {
+            return new FrameDataCollection(_library[GlobalTID].Item2);
+        }
+
+        /// <summary>
+        /// Frees up memory we don't need after filling the library
         /// </summary>
         public void CleanUp()
         {

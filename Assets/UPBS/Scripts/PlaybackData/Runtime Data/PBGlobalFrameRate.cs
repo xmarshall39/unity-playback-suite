@@ -25,7 +25,16 @@ public class PBGlobalFrameRate : MonoBehaviour
     private float _time;
     private int _frameCount;
 
+    [SerializeField]
+    private int _targetFrameRate = 60;
+
     public int FrameRate { get; private set; } = 0;
+    public int TargetFrameRate() => _targetFrameRate;
+
+    private void Start()
+    {
+        Application.targetFrameRate = _targetFrameRate;
+    }
 
     void Update()
     {

@@ -522,7 +522,7 @@ namespace MiniJSON
                 else if (value is UPBS.Data.PBTrackerInfo)
                 {
                     UPBS.Data.PBTrackerInfo i = (UPBS.Data.PBTrackerInfo)value;
-                    SerializeObject(new Dictionary<string, object> { { "TID", i.TID }, { "frameDataAssemblyName", i.frameDataAssemblyName } }, ref level);
+                    SerializeObject(new Dictionary<string, object> { { "TID", i.TID }, { "recordingRate", i.recordingRate }, { "frameDataAssemblyName", i.frameDataAssemblyName }, { "originalSceneName", i.originalSceneName } }, ref level);
                 }
                 else
                 {

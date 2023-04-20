@@ -8,7 +8,10 @@ namespace UPBS.Execution
     {
         public override void Refresh()
         {
-            var frameData = PBFrameLibraryManager.Instance.GetCurrentLibraryEntry(trackerID.ID) as Data.PBGlobalFrameData;
+            if (PBFrameLibraryManager.Instance.TryGetCurrentLibraryEntry<Data.PBGlobalFrameData>(trackerID.ID, out var frameData, name))
+            {
+
+            }
 
         }
     }

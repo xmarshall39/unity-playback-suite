@@ -61,12 +61,12 @@ namespace UPBS
         public override void OnInspectorGUI()
         {
             serializedObject.Update();
-            headerColor = EditorGUILayout.ColorField(headerColor);
-            bodyColor = EditorGUILayout.ColorField(bodyColor);
-            EditorGUILayout.Space();
-            EditorGUILayout.Space();
-            EditorGUILayout.Space();
-            EditorGUILayout.Space();
+            //headerColor = EditorGUILayout.ColorField(headerColor);
+            //bodyColor = EditorGUILayout.ColorField(bodyColor);
+            //EditorGUILayout.Space();
+            //EditorGUILayout.Space();
+            //EditorGUILayout.Space();
+            //EditorGUILayout.Space();
 
             ShowList(cosmeticTypesProp, useDerivedClassesProp);
             
@@ -82,7 +82,20 @@ namespace UPBS
                 EditorGUILayout.PropertyField(sceneSuffixProp);
             }
 
+            EditorGUILayout.Space();
+            EditorGUILayout.Space();
+            //EditorGUILayout.Space();
+            //EditorGUILayout.Space();
+
             
+            if (GUILayout.Button(new GUIContent("Generate Playback Scene"), UPBSEditorStyles.UtilityButton))
+            {
+                //Generate Scene
+                (serializedObject.targetObject as GeneratePlaybackScene).Generate();
+            }
+
+            //EditorGUILayout.Space();
+            //EditorGUILayout.Space();
 
             serializedObject.ApplyModifiedProperties();
         }
@@ -163,7 +176,7 @@ namespace UPBS
                     {
                         DrawVerticalLine(Color.gray, 1);
 
-                        if (GUILayout.Button(new GUIContent("Add Component")))
+                        if (GUILayout.Button(new GUIContent("Add Reflection Type")))
                         {
                             var searchProvider = CreateInstance<ComponentSearchProvider>();
                             searchProvider.AssignCallback(AddComponent);

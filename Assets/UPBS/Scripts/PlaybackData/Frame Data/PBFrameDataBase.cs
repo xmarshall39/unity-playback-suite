@@ -101,7 +101,7 @@ namespace UPBS.Data
     [System.Serializable]
     public abstract class PBFrameDataBase : ICloneable
     {
-        public int Timestamp { get; private set; } = 0;
+        public ulong Timestamp { get; private set; } = 0;
 
         public PBFrameDataBase() { }
         
@@ -139,9 +139,9 @@ namespace UPBS.Data
         protected virtual bool ParseRowInternal(PBFrameParser parser, string[] row, int rowNumber)
         {
             bool allClear = true;
-            if(float.TryParse(parser.GetColumnValue("Timestamp", row, rowNumber), out float temp))
+            if(ulong.TryParse(parser.GetColumnValue("Timestamp", row, rowNumber), out ulong temp))
             {
-                Timestamp = (int)temp;
+                Timestamp = temp;
             }
             else
             {

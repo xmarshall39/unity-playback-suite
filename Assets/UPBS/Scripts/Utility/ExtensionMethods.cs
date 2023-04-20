@@ -57,6 +57,10 @@ namespace UPBS.Utility
         {
             return new string[] { $"{baseName}_x", $"{baseName}_y", $"{baseName}_z", $"{baseName}_w" };
         }
+        public static string[] Header(this Color v, string baseName)
+        {
+            return new string[] { $"{baseName}_r", $"{baseName}_g", $"{baseName}_b", $"{baseName}_a" };
+        }
         public static string[] Header(this Matrix4x4 v, string baseName)
         {
             return new string[] { 
@@ -87,6 +91,10 @@ namespace UPBS.Utility
         public static string[] HeaderAppends(this Quaternion _)
         {
             return new string[] { "x", "y", "z", "w" };
+        }
+        public static string[] HeaderAppends(this Color _)
+        {
+            return new string[] { "r", "g", "b", "a" };
         }
 
         public static string[] HeaderAppends(this Matrix4x4 _)

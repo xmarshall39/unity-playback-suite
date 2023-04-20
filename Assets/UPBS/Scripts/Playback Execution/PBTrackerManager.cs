@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Linq;
 
+//Should be UPBS.Data???
 namespace UPBS.Execution
 {
     /// <summary>
@@ -68,6 +69,23 @@ namespace UPBS.Execution
                 tracker.RefreshTID();
             }
             
+        }
+
+        [EasyButtons.Button]
+        private void RefreshTrackers()
+        {
+            foreach (var tracker in FindObjectsOfType<UPBS.Data.UPBSTracker>())
+            {
+                tracker.RefreshTID();
+            }
+        }
+
+        [ContextMenu("Reset ID Values")]
+        private void ResetIDValues()
+        {
+            seed = 1234;
+            _TIDReferences = new PBTrackerID[0];
+            _claimedTags = new int[0];
         }
     }
 }
