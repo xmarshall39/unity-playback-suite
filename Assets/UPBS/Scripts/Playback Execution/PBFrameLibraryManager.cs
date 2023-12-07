@@ -8,6 +8,9 @@ using FrameDataCollection = System.Collections.Generic.SortedDictionary<ulong, U
 
 namespace UPBS.Execution
 {
+    /// <summary>
+    /// Manager class for all FrameData in a playback environment
+    /// </summary>
     public class PBFrameLibraryManager : MonoBehaviour
     {
 
@@ -71,7 +74,10 @@ namespace UPBS.Execution
                 var frame = (PBFrameDataBase)System.Activator.CreateInstance(type);
                 if (frame.ParseRow(parserDictionary[type], fullFile[i].Split(','), i))
                 {
-                    trackerFrames.Add(frame.Timestamp, frame);
+                    if (!trackerFrames.ContainsKey(frame.Timestamp))
+                    {
+                        trackerFrames.Add(frame.Timestamp, frame);
+                    }
                 }
 
                 else

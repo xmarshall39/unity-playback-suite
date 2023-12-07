@@ -47,6 +47,7 @@ namespace UPBS.UI
             {
                 _instance = this;
                 DontDestroyOnLoad(this.gameObject);
+                loadingBarCanvas.gameObject.SetActive(false);
             }
             else
             {
@@ -83,7 +84,6 @@ namespace UPBS.UI
 
         public void BeginLoading(int maxElements)
         {
-            
             _currentProgress = 0;
             _maxProgress = maxElements;
             LoadingBarActive = true;
@@ -93,6 +93,11 @@ namespace UPBS.UI
             _barFillArea.rectTransform.SetRight(targetFillX);
             loadingBarCanvas.gameObject.SetActive(true);
             StartCoroutine(nameof(FillLoadingBar));
+        }
+
+        public void AddLoadingObjectives(int elements)
+        {
+            _maxProgress += elements;
         }
 
         public void UpdateProgress(int incriment = 1)

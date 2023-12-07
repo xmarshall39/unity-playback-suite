@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace UPBS.Execution
@@ -17,7 +18,7 @@ namespace UPBS.Execution
         }
         private void Awake()
         {
-            if (_instance)
+            if (_instance == null)
             {
                 _instance = this;
             }
@@ -30,8 +31,7 @@ namespace UPBS.Execution
 
         //Find all of the Playback cameras active in the scene
         //You can retrieve copies of this array and perform actions on each cam externally
-        [SerializeField]
-        private IPBCameraBase[] _playbackCameras;
+        [SerializeField] private IPBCameraBase[] _playbackCameras;
         private int _currentCameraIndex = 0;
         
         public IPBCameraBase[] GetPlaybackCameras()
@@ -102,9 +102,14 @@ namespace UPBS.Execution
         }
 
         //Default to the first found Camera Reflection. Typically, there should only be one
-        private void Initialize()
+        public void Initialize()
         {
-            _playbackCameras = UPBS.Utility.HelperFunctions.ConcatArrays(FindObjectsOfType<PBCameraReflection>(), _playbackCameras);
+            HashSet<IPBCameraBase> foundCameras = _playbackCameras == null ? new HashSet<IPBCameraBase>() : new HashSet<IPBCameraBase>(_playbackCameras);
+            foreach (var cam in FindObjectsOfType<PBCameraReflection>())
+            {
+                foundCameras.Add(cam);
+            }
+            _playbackCameras = foundCameras.ToArray();
 
             if (_playbackCameras.Length == 0)
             {

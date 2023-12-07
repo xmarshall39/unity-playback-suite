@@ -52,7 +52,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2134913563864957162}
-  - component: {fileID: 4359354813863451563}
+  - component: {fileID: 7973964264052994329}
+  - component: {fileID: 3453617705963512413}
+  - component: {fileID: 5506358882046181216}
   m_Layer: 0
   m_Name: '[Image Rendering Manager]'
   m_TagString: Untagged
@@ -76,7 +78,7 @@ Transform:
   m_Father: {fileID: 3625724392461820300}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4359354813863451563
+--- !u!114 &7973964264052994329
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -85,12 +87,39 @@ MonoBehaviour:
   m_GameObject: {fileID: 1554030679321460168}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 96d0094fec80aa14db88016cf9daf7e1, type: 3}
+  m_Script: {fileID: 11500000, guid: 2f6a5898dc8f4c64d8ec0256de69724f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _IRCam: {fileID: 2535282398336749932}
   _IRCanvas: {fileID: 6773582503450447616}
   _IRProgressText: {fileID: 8359023191103016855}
+  _uiController: {fileID: 0}
+--- !u!114 &3453617705963512413
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1554030679321460168}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 23b29b99d1de02a44ac95149f53cab43, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _uiController: {fileID: 0}
+--- !u!114 &5506358882046181216
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1554030679321460168}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a6bb49832b1769e4ea2b9180930f0f45, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  affectedTrackedObjects: []
 --- !u!1 &3532123887881157197
 GameObject:
   m_ObjectHideFlags: 0
@@ -344,7 +373,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
-  m_BackGroundColor: {r: 0.3679245, g: 0.3679245, b: 0.3679245, a: 0}
+  m_BackGroundColor: {r: 0.32894272, g: 0.4208775, b: 0.5660378, a: 1}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0

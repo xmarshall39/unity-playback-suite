@@ -185,7 +185,7 @@ namespace UPBS.Execution
             //FileLocation: [TrialDir]/[MandatoryTrackerDir]/[gameobjectName]_UPBSTracker_Global_[TrialNumber].csv
             //So we check for non-variable substrings by splitting by underscore
             //When I fork UXF, I might make the measurement descriptor static...
-            
+            UPBS.UI.LoadingBar.Instance?.BeginLoading(1);
             if (DirectoryValidated == false)
             {
                 Debug.LogWarning("Provided Data Path not validated!");
@@ -193,6 +193,7 @@ namespace UPBS.Execution
             }
 
             yield return SceneManager.LoadSceneAsync(playbackSceneName);
+            UPBS.UI.LoadingBar.Instance?.UpdateProgress(1);
             yield return null;
             if(PBFrameLibraryManager.Instance == null)
             {
@@ -214,7 +215,7 @@ namespace UPBS.Execution
             Debug.Log("Mandatory trackers successfully loaded in the dictionary");
             string additionalFilePath = Path.Combine(trialDataPath, Constants.ADDITIONAL_DATA_DIR);
             string[] additionalFiles = Directory.GetFiles(additionalFilePath);
-            UPBS.UI.LoadingBar.Instance?.BeginLoading(additionalFiles.Length);
+            UPBS.UI.LoadingBar.Instance?.AddLoadingObjectives(additionalFiles.Length);
 
             Dictionary<int, TrackerProcessor> processingDict = new Dictionary<int, TrackerProcessor>();
 
@@ -263,6 +264,7 @@ namespace UPBS.Execution
             //So unless something exceptional happens, we're good.
             PBFrameLibraryManager.Instance.CleanUp();
             PBFrameController.Instance?.Initialize(); // Make this event-based later
+            PBCameraManager.Instance?.Initialize();
             //IN PARALLELL: Any external data should be loaded as well as determined by the developer. Let's assume that's all done for now...
 
             //With all our loading complete, we can now enable the FrameControllerManager and then Initialize the UI

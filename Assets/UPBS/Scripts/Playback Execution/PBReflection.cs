@@ -4,6 +4,9 @@ using UnityEngine;
 using UPBS.Data;
 namespace UPBS.Execution
 {
+    /// <summary>
+    /// Framework for classes that "reflect" what a Tracker records at runtime
+    /// </summary>
     [RequireComponent(typeof(PBTrackerID))]
     public abstract class PBReflection : PBFrameControllerUpdateListener
     {

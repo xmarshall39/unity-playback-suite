@@ -197,7 +197,8 @@ namespace UPBS.Execution
         private float SpeedToDelay()
         {
             float speedModifier = _speedIncriment * (_speed - (_maxSpeed / 2));
-            float delay = _recordingRate - (speedModifier * _recordingRate);
+            float baseDelay = 1f / _recordingRate;
+            float delay = baseDelay * speedModifier;
             print($"SpeedModifer: {speedModifier} | Delay: { delay} ");
             return delay;
         }

@@ -36,13 +36,16 @@ namespace UPBS.Execution
         protected override void Start()
         {
             base.Start();
-            if (!TryGetComponent(out Camera cam))
+            if (TryGetComponent(out Camera cam))
             {
-                Debug.LogError($"No Camera component attached to {gameObject.name}");
                 _camInfo = new PBCameraInfo() { cam = cam, name = gameObject.name };
             }
+            else
+            {
+                Debug.LogError($"No Camera component attached to {gameObject.name}");
+            }
 
-            if(!TryGetComponent(out PBRenderCamera renderCam))
+            if (!TryGetComponent(out PBRenderCamera renderCam))
             {
                 renderCam = gameObject.AddComponent<PBRenderCamera>();
             }
