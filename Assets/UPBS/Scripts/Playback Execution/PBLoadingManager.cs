@@ -132,25 +132,25 @@ namespace UPBS.Execution
 
             if (globalTrackerPath == null)
             {
-                Debug.LogWarning("Global Tracker Path not found!");
+                Debug.LogWarning("Directory Not Valid: Global Tracker Path not found!");
                 DirectoryValidated = false;
                 return false;
             }
             if (globalInfoPath == null)
             {
-                Debug.LogWarning("Global Info Path not found!");
+                Debug.LogWarning("Directory Not Valid: Global Info Path not found!");
                 DirectoryValidated = false;
                 return false;
             }
             if (cameraTrackerPath == null)
             {
-                Debug.LogWarning("Camer Tracker Path not found!");
+                Debug.LogWarning("Directory Not Valid: Camera Tracker Path not found!");
                 DirectoryValidated = false;
                 return false;
             }
             if (cameraInfoPath == null)
             {
-                Debug.LogWarning("Camera Info Path not found!");
+                Debug.LogWarning("Directory Not Valid: Camera Info Path not found!");
                 DirectoryValidated = false;
                 return false;
             }
@@ -160,7 +160,7 @@ namespace UPBS.Execution
             CameraTrackerInfo = JsonUtility.FromJson<PBTrackerInfo>(File.ReadAllText(cameraInfoPath));
             if (!GlobalTrackerInfo.IsValid() || !CameraTrackerInfo.IsValid())
             {
-                Debug.LogWarning("Unable to parse mandatory tracker info");
+                Debug.LogWarning("Directory Not Valid: Unable to parse mandatory tracker info");
                 DirectoryValidated = false;
                 return false;
             }
