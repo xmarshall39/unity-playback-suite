@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UPBS.UI;
 using System.Reflection;
+using System.IO;
+//using System.Text.Json;
 using System;
 
 namespace UPBS.Utility
@@ -126,7 +128,37 @@ namespace UPBS.Utility
         public MemberInfo member;
     }
 
-    public static class PBSettingsLibrary
+    public class SettingsSaveFile
+    {
+        string filename = "upbs_settings.json";
+        string savePath = string.Empty;
+        Dictionary<string, //SceneName
+            Dictionary<Type, //MonoType
+                Dictionary<string, string>>> //InstanceKey->ObjectValue(JSON)
+        saveData = new Dictionary<string, Dictionary<Type, Dictionary<string, string>>>();
+
+        public SettingsSaveFile()
+        {
+            savePath = System.IO.Path.Combine(Application.persistentDataPath, "SettingsSave", filename);
+        }
+
+        /// <summary>
+        /// Locate the settings save file if present.
+        /// </summary>
+        /// <returns></returns>
+        public bool LoadSettingsFile()
+        {
+            //System.Text.System.IO.File.ReadAllText(savePath);
+            return true;
+        }
+
+        public bool SaveSettingsFile()
+        {
+            return true;
+        }
+    }
+
+    public static class PBSettingsLibrary 
     {
         public static bool IsInitialized { get; private set; }
 
@@ -271,6 +303,8 @@ namespace UPBS.Utility
                                         ++i;
                                         generatedName = baseName + "_" + i;
                                     }
+
+                                    //prop.GetValue(obj, )
 
                                     new SettingsAttributeContainer()
                                     {
