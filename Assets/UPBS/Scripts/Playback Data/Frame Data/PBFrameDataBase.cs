@@ -4,6 +4,10 @@ using System;
 using System.Linq;
 namespace UPBS.Data
 {
+    /// <summary>
+    /// A utlitly class capable of retrieving data from any type of FrameData once initialized to that FrameData's structure.
+    /// It behaves like a generic pipeline from .csv strings into FrameData info usable at runtime.
+    /// </summary>
     public class PBFrameParser
     {
         private readonly static char[] TRIM_CHARS = { '\n', ' ', '\t', '\r', '\b', '\f', '\v', '\0' };

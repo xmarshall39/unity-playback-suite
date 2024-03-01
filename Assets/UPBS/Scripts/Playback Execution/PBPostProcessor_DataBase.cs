@@ -24,7 +24,7 @@ namespace UPBS.Execution
         public override void WriteToFile(string path)
         {
             FormatData();
-            File.AppendAllText(path, data);
+            File.AppendAllText(path, data); //This is an I/O nightmare
         }
     }
 
