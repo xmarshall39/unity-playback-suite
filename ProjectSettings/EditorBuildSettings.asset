@@ -5,14 +5,14 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/Test/Scenes/UIEnv.unity
     guid: dee1ddf5ddde84846a10a96d2cfcc0bd
-  - enabled: 1
+  - enabled: 0
     path: Assets/Test/Scenes/TestDataEntry_Playback.unity
     guid: cc393a7ed8200474f8539a6d470f62bc
   - enabled: 1
-    path: Assets/Test/Scenes/TestDataEntry.unity
+    path: Assets/UPBS Main/Examples/SimplePrimitiveExample/Scenes/TestDataEntry.unity
     guid: f1aec7be359772a41bbf7a3f203038b1
   - enabled: 0
     path: Assets/DevelopmentScene.unity
@@ -36,12 +36,12 @@ EditorBuildSettings:
     path: Assets/Testing/AWS1HourTest.unity
     guid: 446013cde4af0f6489957921c51d090c
   - enabled: 1
-    path: Assets/Test/Scenes/TestDataEntry-PLAYBACK-ver1.unity
+    path: Assets/UPBS Main/Examples/SimplePrimitiveExample/Scenes/TestDataEntry-PLAYBACK-ver1.unity
     guid: b97d69c35bb2cc14d9e0379370ac1f41
-  - enabled: 1
+  - enabled: 0
     path: Assets/Test/Scenes/TestDataEntry-PLAYBACK-ver2.unity
     guid: 2fb551d1ed6bbd443ac0624ed7844305
-  - enabled: 1
+  - enabled: 0
     path: Assets/Test/Scenes/TestDataEntry-PLAYBACK-ver3.unity
     guid: baf1daa545d62054dbc544326e0e9f69
   m_configObjects: {}

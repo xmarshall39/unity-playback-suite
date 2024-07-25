@@ -9,9 +9,9 @@ public class ExportUPBSPackage : MonoBehaviour
     public static void ExportPackage()
     {
         string version;
-        if (File.Exists("Assets/UXF/VERSION.txt"))
+        if (File.Exists("Assets/UPBS Main/VERSION.txt"))
         {
-            version = File.ReadAllText("Assets/UPBS/VERSION.txt");
+            version = File.ReadAllText("Assets/UPBS Main/VERSION.txt");
         }
         else
         {
@@ -23,7 +23,7 @@ public class ExportUPBSPackage : MonoBehaviour
         {
             string[] assets = new string[]
             {
-                "Assets/UPBS",
+                "Assets/UPBS Main",
                 "Assets/Editor",
                 "Assets/StreamingAssets",
                 "Assets/UXF",
