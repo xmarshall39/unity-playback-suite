@@ -268,8 +268,7 @@ namespace UXF
               .Select(y => y.Key)
               .ToList();
 
-            if (duplicateTrackers.Any())
-                throw new InvalidOperationException(string.Format("Two or more trackers in the Tracked Objects field in the Session Inspector have the following object name and descriptor pair, please change the object name fields on the trackers to make them unique: {0}", string.Join(",", duplicateTrackers)));
+            if (duplicateTrackers.Any()) throw new InvalidOperationException(string.Format("Two or more trackers in the Tracked Objects field in the Session Inspector have the following object name and descriptor pair, please change the object name fields on the trackers to make them unique: {0}", string.Join(",", duplicateTrackers)));
 
             // log tracked objects
             foreach (Tracker tracker in session.trackedObjects)
@@ -288,7 +287,7 @@ namespace UXF
                                 recordingRate = Time.fixedDeltaTime;
                                 break;
                             case TrackerUpdateType.LateUpdate:
-                                recordingRate = 1f / (float)UPBS.Data.PBGlobalFrameRate.Instance?.TargetFrameRate();
+                                recordingRate = 1f / (float)PBGlobalFrameRate.Instance?.TargetFrameRate();
                                 break;
                         }
 
@@ -297,20 +296,8 @@ namespace UXF
                             frameDataAssemblyName = PBTracker.FrameDataType.GetType().AssemblyQualifiedName,
                             originalSceneName = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name,
                             TID = PBTracker.TrackerID.ID,
-                            prefabHierarchyKey = PBTracker.TrackerID.PositionInPrefabHierarchy,
-                            prefabInstanceID = PBTracker.SpawnedRootInstanceID,
-                            recordingRate = recordingRate,
-                            firstTimestamp = PBTracker.FirstFrame,
-                            lastTimestamp = PBTracker.LastFrame
+                            recordingRate = recordingRate
                         };
-
-                        if (PBTracker.DynamicallyInstantiated)
-                        {
-                            trackerInfo.dynamicallyCreated = PBTracker.DynamicallyInstantiated;
-                            trackerInfo.assetAddress = PBTracker.reflectionPrefabAddress;
-                            trackerInfo.replicationPrefabAssetPath = PBTracker.reflectionPrefabAssetPath;
-                        }
-
                         SaveJSONSerializableObject(trackerInfo, tracker.DataName, tracker.UXFDType);
                     }
                     

@@ -6,19 +6,16 @@ using UXF;
 
 namespace UPBS.Data
 {
-    public class PBColorTracker : UPBSTracker
+    public class PBScaleTracker : UPBSTracker
     {
-        public Material mat;
-        public string colorKey = "_Tint Color";
-        public override PBFrameDataBase FrameDataType => new PBColorFrameData();
-        public override Type ReflectionType => typeof(UPBS.Player.PBColorReflection);
+        public override PBFrameDataBase FrameDataType => new PBScaleFrameData();
+        public override Type ReflectionType => typeof(UPBS.Player.PBScaleReflection);
 
-        public override string MeasurementDescriptor => base.MeasurementDescriptor + UPBS.Constants.UPBS_COL_DESC;
+        public override string MeasurementDescriptor => base.MeasurementDescriptor + UPBS.Constants.UPBS_SCALE_DESC;
         public override UXFDataType UXFDType => UXFDataType.AdditionalTrackers;
-        
+
         protected override void Start()
         {
-            mat = GetComponent<MeshRenderer>().material;
             base.Start();
             if (Session.instance)
             {
@@ -28,7 +25,6 @@ namespace UPBS.Data
 
         protected override UXFDataRow GetCurrentValues()
         {
-            Color col = mat.GetColor(colorKey);
             var row = base.GetCurrentValues();
             row.AddRange
                 (
@@ -42,10 +38,9 @@ namespace UPBS.Data
                     ("EulerRotation_y", transform.eulerAngles.y),
                     ("EulerRotation_z", transform.eulerAngles.z),
 
-                    ("Color_r", col.r),
-                    ("Color_g", col.g),
-                    ("Color_b", col.b),
-                    ("Color_a", col.a)
+                    ("LocalScale_x", transform.localScale.x),
+                    ("LocalScale_y", transform.localScale.y),
+                    ("LocalScale_z", transform.localScale.z)
 
                 }
                 );

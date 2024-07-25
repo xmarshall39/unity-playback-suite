@@ -5,10 +5,8 @@ using UPBS.Utility;
 
 namespace UPBS.Data
 {
-    public class PBColorFrameData : PBFrameDataBase
+    public class PBColorFrameData : PBPositionRotationFrameData
     {
-        public Vector3 WorldPosition { get; protected set; } = Vector3.zero;
-        public Vector3 EulerRotation { get; protected set; } = Vector3.zero;
         public Color MaterialColor { get; protected set; } = Color.white;
 
         public PBColorFrameData() : base()
@@ -18,37 +16,14 @@ namespace UPBS.Data
 
         public PBColorFrameData(PBColorFrameData other) : base(other)
         {
-            WorldPosition = other.WorldPosition;
-            EulerRotation = other.EulerRotation;
             MaterialColor = other.MaterialColor;
         }
 
         protected override bool ParseRowInternal(PBFrameParser parser, string[] row, int rowNumber)
         {
             bool allClear = base.ParseRowInternal(parser, row, rowNumber);
-            if (parser.GetColumnValuesAsFloats("WorldPosition", row, rowNumber, out float[] vals, WorldPosition.HeaderAppends()))
-            {
-                WorldPosition = new Vector3(vals[0], vals[1], vals[2]);
-            }
 
-            else
-            {
-                allClear = false;
-                Debug.LogWarning($"WorldPosition value in row {rowNumber} could not be parsed!");
-            }
-
-            if (parser.GetColumnValuesAsFloats("EulerRotation", row, rowNumber, out vals, EulerRotation.HeaderAppends()))
-            {
-                EulerRotation = new Vector3(vals[0], vals[1], vals[2]);
-            }
-
-            else
-            {
-                allClear = false;
-                Debug.LogWarning($"EulerRotation value in row {rowNumber} could not be parsed!");
-            }
-
-            if (parser.GetColumnValuesAsFloats("TransformMatrix", row, rowNumber, out vals, MaterialColor.HeaderAppends()))
+            if (parser.GetColumnValuesAsFloats("Color", row, rowNumber, out float[] vals, MaterialColor.HeaderAppends()))
             {
                 MaterialColor = new Color(vals[0], vals[1], vals[2], vals[3]);
             }
@@ -56,7 +31,7 @@ namespace UPBS.Data
             else
             {
                 allClear = false;
-                Debug.LogWarning($"EulerRotation value in row {rowNumber} could not be parsed!");
+                Debug.LogWarning($"Color value in row {rowNumber} could not be parsed!");
             }
 
             return allClear;
@@ -65,9 +40,7 @@ namespace UPBS.Data
         public override string[] GetClassHeader()
         {
             return base.GetClassHeader().Concat(
-                MaterialColor.Header("Color"),
-                WorldPosition.Header("WorldPosition"),
-                EulerRotation.Header("EulerRotation"));
+                MaterialColor.Header("Color"));
         }
 
         public override string[] GetVariableNameDisplay()
