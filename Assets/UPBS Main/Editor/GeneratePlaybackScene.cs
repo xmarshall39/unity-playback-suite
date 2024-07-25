@@ -82,6 +82,11 @@ namespace UPBS.EditorScripts
             comps.RemoveAt(0); //Automatically exclude the Transform component
             foreach (var comp in comps)
             {
+                if (comp == null)
+                {
+                    Debug.LogWarning($"GameObject {go.name} has a null component that will be ignored!");
+                    continue;
+                }
                 nodes.Add(new ComponentDependencyNode(comp));
             }
         }

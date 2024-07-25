@@ -9,12 +9,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 710ce5936368a7c4ba7cae0c263248dd, type: 3}
-  m_Name: BasePlaybackGenerator
+  m_Script: {fileID: 11500000, guid: f4f44f0c6968b5940ad66937d6343282, type: 3}
+  m_Name: SamplePlaybackGenerator
   m_EditorClassIdentifier: 
   replicationTypes:
   - m_Name: PBTrackerID
-    m_AssemblyQualifiedName: UPBS.Execution.PBTrackerID, Assembly-CSharp, Version=0.0.0.0,
+    m_AssemblyQualifiedName: UPBS.PBTrackerID, Assembly-CSharp, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
     m_AssemblyName: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
   - m_Name: Camera
@@ -44,4 +44,4 @@ MonoBehaviour:
   replicateCurrentSceneOnly: 1
   autoSaveGeneratedScene: 1
   replicationPrecision: 0
-  sceneSuffix: ver5
+  sceneSuffix: ver1
