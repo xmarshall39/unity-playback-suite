@@ -4,19 +4,10 @@ using UnityEngine;
 
 namespace UPBS.Player
 {
-    public abstract class PBVisualization : PBFrameControllerUpdateListener
+    public abstract class  PBVisualization : PBFrameControllerUpdateListener
     {
         [SerializeField]
         private List<int> trackerIDs;
-
-        /// <summary>
-        /// Ensure that the provided trackers exist
-        /// </summary>
-        public void ValidateTrackers()
-        {
-
-        }
-
     }
 }
 

@@ -5,6 +5,8 @@ using UnityEngine;
 using UPBS.Data;
 using UPBS.Utility;
 using FrameDataCollection = System.Collections.Generic.SortedDictionary<ulong, UPBS.Data.PBFrameDataBase>;
+using ExternalFrameDataCollection = System.Collections.Generic.Dictionary<string, System.Collections.Generic.SortedDictionary<ulong, UPBS.Data.PBFrameDataBase>>;
+
 
 namespace UPBS.Player
 {
@@ -55,12 +57,15 @@ namespace UPBS.Player
         public void SetGlobalTID(int tid) => GlobalTID = tid;
 
         private Dictionary< int, LibraryEntry> _library;
+        private Dictionary<string, LibraryEntry> _externalLibrary;
+
         private Dictionary<System.Type, PBFrameParser> parserDictionary;
         private ConcurrentDictionary<System.Type, PBFrameParser> _parserDictionary;
 
         private void Start()
         {
             _library = new Dictionary<int, LibraryEntry>();
+            _externalLibrary = new Dictionary<string, LibraryEntry>();
             parserDictionary = new Dictionary<System.Type, PBFrameParser>();
         }
 

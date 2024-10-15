@@ -99,7 +99,7 @@ namespace UPBS.Data
 
     /// <summary>
     /// A base class for frame data containers which holds common functionality.
-    /// This class (and it's children) define the formatting of Tracker data collected at runtime and it's mapping in playback.
+    /// This class (and it's children) define the formatting of Tracker (and external) data collected at runtime and it's mapping in playback.
     /// This effectively synchronizes the functionality of data collection with the expectations of playback.
     /// </summary>
     [System.Serializable]

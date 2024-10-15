@@ -31,7 +31,11 @@ namespace UPBS.Player
 
         //Find all of the Playback cameras active in the scene
         //You can retrieve copies of this array and perform actions on each cam externally
-        [SerializeField] private IPBCameraBase[] _playbackCameras;
+        [Tooltip("Add any user-added playback cameras here!")]
+        public IPBCameraBase[] additionalPlaybackCameras;
+
+
+        private IPBCameraBase[] _playbackCameras;
         private int _currentCameraIndex = 0;
         
         public IPBCameraBase[] GetPlaybackCameras()
@@ -104,12 +108,21 @@ namespace UPBS.Player
         //Default to the first found Camera Reflection. Typically, there should only be one
         public void Initialize()
         {
-            HashSet<IPBCameraBase> foundCameras = _playbackCameras == null ? new HashSet<IPBCameraBase>() : new HashSet<IPBCameraBase>(_playbackCameras);
-            foreach (var cam in FindObjectsOfType<PBCameraReflection>())
+            var reflectedCameras = FindObjectsOfType<PBCameraReflection>();
+
+            int serializedCameraCount = additionalPlaybackCameras == null ? 0 : _playbackCameras.Length;
+            int reflectedCameraCount = reflectedCameras.Length;
+
+            _playbackCameras = new IPBCameraBase[serializedCameraCount + reflectedCameraCount];
+            for (int i = 0; i < reflectedCameraCount; ++i)
             {
-                foundCameras.Add(cam);
+                _playbackCameras[i] = reflectedCameras[i];
             }
-            _playbackCameras = foundCameras.ToArray();
+
+            for (int i = 0; i < serializedCameraCount; ++i)
+            {
+                _playbackCameras[reflectedCameraCount + i] = additionalPlaybackCameras[i];
+            }
 
             if (_playbackCameras.Length == 0)
             {
