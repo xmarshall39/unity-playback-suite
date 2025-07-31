@@ -30,19 +30,19 @@ Since UPBS provides replays with all of the original environmental state informa
 
 #### Simple Scene
 
-[Simple scene - first-person view](https://raw.githubusercontent.com/xmarshall39/unity-playback-suite/master/Videos/DemoVideo_FPReconstructed90FPS.mp4)
+[Movie 1](https://raw.githubusercontent.com/xmarshall39/unity-playback-suite/master/Videos/DemoVideo_FPReconstructed90FPS.mp4)
 
-[Simple Scene - First-person playback view](https://raw.githubusercontent.com/xmarshall39/unity-playback-suite/master/Videos/DemoVideo_PlaybackFPOBS.mp4)
+[Movie 2](https://raw.githubusercontent.com/xmarshall39/unity-playback-suite/master/Videos/DemoVideo_PlaybackFPOBS.mp4)
 
-[Simple Scene - Third-person view](https://raw.githubusercontent.com/xmarshall39/unity-playback-suite/master/Videos/DemoVideo_TPReconstructed.mp4)
+[Movie 3](https://raw.githubusercontent.com/xmarshall39/unity-playback-suite/master/Videos/DemoVideo_TPReconstructed.mp4)
 
-[Simple Sceene - Third-person playback view](https://raw.githubusercontent.com/xmarshall39/unity-playback-suite/master/Videos/DemoVideo_PlaybackTPOBS.mp4)
+[Movie 4](https://raw.githubusercontent.com/xmarshall39/unity-playback-suite/master/Videos/DemoVideo_PlaybackTPOBS.mp4)
 
 #### Complex Scene
 
-[Complex scene - first-person view](https://raw.githubusercontent.com/xmarshall39/unity-playback-suite/master/Videos/Movie5.mp4)
+[Movie 5](https://raw.githubusercontent.com/xmarshall39/unity-playback-suite/master/Videos/Movie5.mp4)
 
-[Complex scene - top-down view](https://raw.githubusercontent.com/xmarshall39/unity-playback-suite/master/Videos/Movie6.mp4)
+[Movie 6](https://raw.githubusercontent.com/xmarshall39/unity-playback-suite/master/Videos/Movie6.mp4)
 
 ## Contact
 For inquires on the project, feel free to reach out to me at xmarshall.dev@gmail.com
