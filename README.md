@@ -30,13 +30,13 @@ Since UPBS provides replays with all of the original environmental state informa
 
 #### Simple Scene
 
-[Movie 1](https://raw.githubusercontent.com/xmarshall39/unity-playback-suite/master/Videos/DemoVideo_FPReconstructed90FPS.mp4)
+[Movie 1](https://raw.githubusercontent.com/xmarshall39/unity-playback-suite/master/Videos/Movie1.mp4)
 
-[Movie 2](https://raw.githubusercontent.com/xmarshall39/unity-playback-suite/master/Videos/DemoVideo_PlaybackFPOBS.mp4)
+[Movie 2](https://raw.githubusercontent.com/xmarshall39/unity-playback-suite/master/Videos/Movie2.mp4)
 
-[Movie 3](https://raw.githubusercontent.com/xmarshall39/unity-playback-suite/master/Videos/DemoVideo_TPReconstructed.mp4)
+[Movie 3](https://raw.githubusercontent.com/xmarshall39/unity-playback-suite/master/Videos/Movie3.mp4)
 
-[Movie 4](https://raw.githubusercontent.com/xmarshall39/unity-playback-suite/master/Videos/DemoVideo_PlaybackTPOBS.mp4)
+[Movie 4](https://raw.githubusercontent.com/xmarshall39/unity-playback-suite/master/Videos/Movie4.mp4)
 
 #### Complex Scene
 
